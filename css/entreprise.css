@@ -1,0 +1,127 @@
+                            /*Le tableau*/
+#ent_companies {
+    display: flex;
+    justify-content: center;
+}
+
+#ent_companies fieldset {
+    width: 100%;
+}
+
+#ent_board {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+fieldset legend {
+    font-style: italic;
+}
+
+/*Les lignes*/
+tr {
+    border: 1px solid #87BB34;
+    background-color: #BDC3C7;
+}
+
+#ent_tbody tr:nth-child(2n+1) {
+    background-color: #FFFFFF;
+}
+
+#ent_tbody tr:nth-child(2n) {
+    background-color: #87BB34;
+}
+
+th, td {
+    height: 25px;
+}
+
+                        /*La selection, recherche*/
+#ent_search {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#ent_searchInputs input {
+    border: 1px solid #87BB34;
+    height: 20px;
+    background: url(../img/searchBackground.png) no-repeat;
+    background-size: 10%;
+    background-position: 2% 1px; 
+    padding-left: 27px;
+}
+
+#ent_searchInputs input:focus {
+    outline-style: solid;
+    outline-color: #87BB34;
+    outline-width: 1px;
+}
+
+                            /*Le formulaire*/
+
+/*Les trois fieldset*/
+#ent_form {
+    margin-top: 20px;
+}
+
+#ent_coordonneesTotal {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*Les champs*/
+#ent_coordonneesTotal input {
+    border: 1px solid #87BB34;
+}
+
+#ent_coordonneesTotal input:focus {
+    outline-width: 1px;
+    outline-style: solid;
+    outline-color: #87BB34;
+}
+
+/*Le bloc nom, activité et adresse*/
+#ent_coordonneesDiv, #ent_repreDiv, #ent_TutorDiv {
+    display: flex;
+    font-size: 0.8em;
+}
+
+#ent_repreDiv legend, #ent_TutorDiv legend {
+    font-size: 1.2em;
+}
+
+#ent_activityDiv {
+    font-size: 0.8em;
+    margin-top: -20px;
+}
+
+.ent_alignDiv {
+    display: flex;
+}
+
+#ent_nomMailDiv p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#ent_adressDiv p {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.ent_columnDiv p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/*Les boutons*/
+#ent_buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+#ent_buttons button {
+    margin-left: 10px;
+}
