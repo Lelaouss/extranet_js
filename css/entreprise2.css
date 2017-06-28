@@ -36,6 +36,22 @@ th, td {
     height: 25px;
 }
 
+.ent_pictoDelete {
+    width: 16px;
+    height: 18px;
+    padding-top: 4px;
+    margin-left: 10px;
+}
+
+.ent_pictoModify {
+    width: 20px;
+    height: auto;
+}
+
+.ent_pictoDelete:hover, .ent_pictoModify:hover {
+    cursor: pointer;
+}
+
 
                         /*La selection, recherche*/
 #ent_search {

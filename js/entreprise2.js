@@ -114,12 +114,12 @@ function ent_clearHTMLBoard() {
     // remise à zéro du compteur de lignes des tableaux
     ent_numLines = 0;
 }
-            
+
 
 // fonction qui reconstruit le tableau HTML à partir des tableaux JS
 function ent_buildHTMLBoard() {
     // variables locales
-    var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel;
+    var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
 
     // tableau
     var ent_arrayToBuild = new Array();
@@ -133,7 +133,7 @@ function ent_buildHTMLBoard() {
             ent_tbody.appendChild(ent_emptyLine);
 
             // création et ajout des cellules vides
-            for(j=0; j<8; j++) {
+            for(j=0; j<9; j++) {
                 ent_emptyCel = document.createElement("td");
                 ent_emptyLine.appendChild(ent_emptyCel);
             }
@@ -162,6 +162,12 @@ function ent_buildHTMLBoard() {
                 // remplissage des cellules avec le JS
                 ent_celBuild.textContent = ent_arrayToBuild[i];
             }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion des pictos pour supprimer et modifier une ligne
+            ent_celPicto.innerHTML = "<img src='../Test Local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine()' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='../Test Local/img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
@@ -202,11 +208,11 @@ function ent_buildHTMLBoard() {
 
 // fonction qui permet de modifier une ligne
 function ent_modifyLine() {
-    
+    console.log("Modify");
 }
 
 
 // fonction qui permet de supprimer une ligne
 function ent_delLine() {
-    
+    console.log("delLine");
 }
