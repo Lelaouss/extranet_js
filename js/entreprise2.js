@@ -56,10 +56,9 @@ function ent_addLine() {
         alert("Veuillez renseigner au moins le nom de l'entreprise...");
         return;
     }
-    ////////////////////////
-    // ent_arraySplitted = ent_arrayJStoSplit[ent_numLines].split("§");
-
+    // on vide le tableau HTML
     ent_clearHTMLBoard();
+    // on le reconstruit à partir du tableau JS
     ent_buildHTMLBoard();
 }
 
@@ -80,9 +79,6 @@ function ent_searchRaz() {
 
 // fonction de sélection de ligne
 function ent_selectLine(iSelectedLine) {
-    // récupération de la checkbox de la ligne cliquée
-    var ent_checkBoxLine = document.getElementById("ent_chkCompanie"+iSelectedLine);
-
     // création d'un tableau splité de la ligne cliquée
     var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
 
@@ -106,40 +102,6 @@ function ent_selectLine(iSelectedLine) {
     ent_t_tutorPrenom.value = ent_arraySplittedSelected[16];
     ent_t_tutorMail.value = ent_arraySplittedSelected[17];
     ent_t_tutorTel.value = ent_arraySplittedSelected[18];
-    
-    // cochage de la checkbox de la ligne
-    if (ent_checkBoxLine.checked == false) {
-        ent_checkBoxLine.checked = true;
-    } else {
-        ent_checkBoxLine.checked = false;
-    }
-    // cochage de la checkbox d'en tête si besoin
-    ent_buttonDisplay();
-}
-
-
-// fonction qui permet de cocher ou décocher toutes les checkbox
-function ent_selectAll() {
-    // variables
-    var i;
-
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
-
-    // tableau contenant toutes les checkbox
-    var ent_selectedLines = new Array;
-    ent_selectedLines = document.getElementsByName("ent_chkCompanie");
-
-    // on parcours tous les éléments checkbox du tableau HTML
-    for (i=0; i<ent_numLines; i++) {
-        // si la checkbox d'en tête est sélectionné elle check toutes les autres
-        if (ent_checkHead.checked) {
-            ent_selectedLines[i].checked = true;
-        // sinon si on la décoche elle décoche toutes les autres
-        } else if (!ent_checkHead.checked) {
-            ent_selectedLines[i].checked = false;
-        }
-    }
 }
 
 
@@ -149,7 +111,6 @@ function ent_clearHTMLBoard() {
     while (ent_tbody.firstChild) {
         ent_tbody.removeChild(ent_tbody.firstChild);
     }
-
     // remise à zéro du compteur de lignes des tableaux
     ent_numLines = 0;
 }
@@ -158,13 +119,10 @@ function ent_clearHTMLBoard() {
 // fonction qui reconstruit le tableau HTML à partir des tableaux JS
 function ent_buildHTMLBoard() {
     // variables locales
-    var i, j, ent_iBuild, ent_lineBuild, celChkBoxBuild, chkBoxBuild, ent_celBuild, ent_emptyLine, ent_emptyCel;
+    var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel;
 
     // tableau
     var ent_arrayToBuild = new Array();
-
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
 
     // si il existe moins de 6 entreprises
     if (ent_arrayJS.length < 6) {
@@ -175,7 +133,7 @@ function ent_buildHTMLBoard() {
             ent_tbody.appendChild(ent_emptyLine);
 
             // création et ajout des cellules vides
-            for(j=0; j<9; j++) {
+            for(j=0; j<8; j++) {
                 ent_emptyCel = document.createElement("td");
                 ent_emptyLine.appendChild(ent_emptyCel);
             }
@@ -190,19 +148,8 @@ function ent_buildHTMLBoard() {
             ent_tbody.prepend(ent_lineBuild);
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-
-            // création de la cellule de checkbox
-            celChkBoxBuild = document.createElement("td");
-            celChkBoxBuild.setAttribute("class", "ent_celCheckBox");
-            chkBoxBuild = document.createElement("input");
-            chkBoxBuild.setAttribute("type", "checkbox");
-            chkBoxBuild.setAttribute("name", "ent_chkCompanie");
-            chkBoxBuild.setAttribute("onclick", "ent_buttonDisplay()");
-            // ajout d'ID sur chaque checkbox
-            chkBoxBuild.setAttribute("id", "ent_chkCompanie"+ent_iBuild);
-            // ajout de value sur chaque checkbox
-            chkBoxBuild.setAttribute("value", ent_iBuild);
-            ent_lineBuild.appendChild(celChkBoxBuild).appendChild(chkBoxBuild);
+            // ajout d'une class pour affichage des icones sur les lignes
+            ent_lineBuild.setAttribute("class", "ent_line");
 
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
@@ -230,19 +177,6 @@ function ent_buildHTMLBoard() {
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
 
-            // création de la cellule de checkbox
-            celChkBoxBuild = document.createElement("td");
-            celChkBoxBuild.setAttribute("class", "ent_celCheckBox");
-            chkBoxBuild = document.createElement("input");
-            chkBoxBuild.setAttribute("type", "checkbox");
-            chkBoxBuild.setAttribute("name", "ent_chkCompanie");
-            chkBoxBuild.setAttribute("onclick", "ent_buttonDisplay()");
-            // ajout d'ID sur chaque checkbox
-            chkBoxBuild.setAttribute("id", "ent_chkCompanie"+ent_iBuild);
-            // ajout de value sur chaque checkbox
-            chkBoxBuild.setAttribute("value", ent_iBuild);
-            ent_lineBuild.appendChild(celChkBoxBuild).appendChild(chkBoxBuild);
-
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
                 // création des cellules
@@ -258,131 +192,21 @@ function ent_buildHTMLBoard() {
             ent_numLines++;
         }
     }
-    // on décoche la checkbox d'en tête si elle est cochée
-    if (ent_checkHead.checked) {
-        ent_checkHead.checked = false;
-    }
     // remise à zéro des champs
     ent_raz();
 }
 
 
-// fonction qui permet de supprimer une ou plusieurs entrées
-function ent_delLine() {
-    // variables
-    var i, ent_selectedLines, ent_linesToDel, ent_delConfirm;
-    var ent_numTbodyCheckboxChecked = 0;
-
-    // on récupère toutes les checkbox
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
-
-    // on consulte les checkbox cochées
-    for (i=0; i<ent_allTbodyCheckbox.length; i++) {
-        if (ent_allTbodyCheckbox[i].checked) {
-            ent_numTbodyCheckboxChecked++;
-        }
-    }
-    // si il y a plusieurs lignes de cochées
-    if (ent_numTbodyCheckboxChecked > 1) {
-        // on demande la confirmation de la suppression des lignes sélectionnées
-        ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer ces lignes ?");
-    } else {
-        // on demande la confirmation de la suppression de la ligne sélectionnée
-        ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?");
-    }
-
-    // si l'utilisateur annule la suppression de ligne
-    if (ent_delConfirm == false) {
-        // on stoppe la suppression
-        return;
-    // si il la confirme
-    } else {
-        // on parcours le nombre de checkbox et on récupère la value de celles qui sont cochées
-        for (i=0; i<ent_numLines; i++) {
-            ent_selectedLines = ent_allTbodyCheckbox[i];
-            if (ent_selectedLines.checked) {
-                // récupération de la value de la ligne sélectionnée
-                ent_linesToDel = ent_selectedLines.value;
-                // on supprime la ligne équivalente à la ligne à supprimer dans les tableaux JS
-                ent_arrayJS.splice(ent_linesToDel, 1);
-                ent_arrayJStoSplit.splice(ent_linesToDel, 1);
-            }        
-        }
-        // on vide le tableau HTML
-        ent_clearHTMLBoard();
-        // on regénère notre tableau HTML avec la ou les ligne(s) en moins
-        ent_buildHTMLBoard();
-    }
-}
-        
-
-// fonction qui gère l'affiche des boutons du formulaire et le cochage de la checkbox d'en tête
-function ent_buttonDisplay() {
-    // variables locales
-    var i, ent_selectedLines;
-
-    // compteur de checkbox cochées
-    var ent_nbCheckedLines = 0;
-
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
-
-    // récupération de toutes les checkbox du tbody
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
-
-    // on parcours les checkbox du tbody et on récupère le nombre de checkbox cochées
-    for (i=0; i<ent_numLines; i++) {
-        ent_selectedLines = ent_allTbodyCheckbox[i];
-        // si une ligne est cochée on incrémente le compteur de checkbox cochées
-        if (ent_selectedLines.checked) {
-            ent_nbCheckedLines++;
-        }
-    }
-
-    // si toutes les lignes sont cochées (au moins une), on coche la checkbox d'en tête
-    if ((ent_nbCheckedLines == ent_numLines) && (ent_nbCheckedLines > 0)) {
-        ent_checkHead.checked = true;
-    // sinon on la décoche
-    } else {
-        ent_checkHead.checked = false;
-    }
-}
 
 
-// fonction qui permet de modifier une ligne sélectionnée
+
+// fonction qui permet de modifier une ligne
 function ent_modifyLine() {
-    // variables locales
-    var i, ent_selectedLines, ent_lineToModify, ent_modifyConfirm;
+    
+}
 
-    // récupération de toutes les checkbox du tbody
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
 
-    // on demande la confirmation de modifier la ligne sélectionnée
-    ent_modifyConfirm = confirm("Êtes-vous sûr de vouloir modifier cette ligne ?");
-
-    // si l'utilisateur annule la modification
-    if (ent_modifyConfirm == false) {
-        // on stop la fonction
-        return;
-    // sinon si il confirme la modification
-    } else {
-        // on parcours le nombre de checkbox et on récupère la value de celle qui est cochée
-        for (i=(ent_numLines-1); i>=0; i--) {
-            ent_selectedLines = ent_allTbodyCheckbox[i];
-            if (ent_selectedLines.checked) {
-                // récupération de la value de la ligne sélectionnée
-                ent_lineToModify = ent_selectedLines.value;
-                // on change les valeurs de la ligne à modifier dans les tableaux JS par celles contenues dans les champs input
-                ent_arrayJS[ent_lineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-                ent_arrayJStoSplit[ent_lineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-            }
-        }
-        // on vide le tableau HTML
-        ent_clearHTMLBoard();
-        // on regénère notre tableau HTML avec la ligne modifiée
-        ent_buildHTMLBoard();
-    }
+// fonction qui permet de supprimer une ligne
+function ent_delLine() {
+    
 }
