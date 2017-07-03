@@ -157,6 +157,7 @@ function ent_buildHTMLBoard() {
                 ent_celBuild = document.createElement("td");
                 // ajout de la détection de click sur chaque cellule
                 ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
                 ent_lineBuild.appendChild(ent_celBuild);
 
                 // remplissage des cellules avec le JS
@@ -190,6 +191,7 @@ function ent_buildHTMLBoard() {
                 ent_celBuild = document.createElement("td");
                 // ajout de la détection de click sur chaque cellule
                 ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
                 ent_lineBuild.appendChild(ent_celBuild);
 
                 // remplissage des cellules avec le tableau JS

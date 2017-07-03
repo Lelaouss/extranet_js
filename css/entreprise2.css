@@ -4,13 +4,15 @@
     justify-content: center;
 }
 
-#ent_companies fieldset {
-    width: 100%;
-}
-
+/*la mise en page globale du tableau*/
 #ent_board {
     border-collapse: collapse;
     text-align: center;
+    width: 100%;
+}
+
+/*le fieldset du tableau*/
+#ent_companies fieldset {
     width: 100%;
 }
 
@@ -32,8 +34,14 @@ tr {
     background-color: #87BB34;
 }
 
+/*Les cellules*/
 th, td {
     height: 25px;
+}
+
+/*La cellule contenant les pictos de suppression et modification*/
+#ent_pictures {
+    width: 50px;
 }
 
 .ent_pictoDelete {
@@ -41,19 +49,32 @@ th, td {
     height: 18px;
     padding-top: 4px;
     margin-left: 10px;
+    visibility: hidden;
+    opacity: 0.6;
 }
 
 .ent_pictoModify {
     width: 20px;
     height: auto;
+    visibility: hidden;
+    opacity: 0.6;
 }
 
 .ent_pictoDelete:hover, .ent_pictoModify:hover {
     cursor: pointer;
+    opacity: 1;
+}
+
+.ent_line:hover .ent_cels {
+    text-decoration: underline;
+}
+
+.ent_line:hover .ent_pictoDelete, .ent_line:hover .ent_pictoModify {
+    visibility: visible;
 }
 
 
-                        /*La selection, recherche*/
+                        /*La recherche*/
 #ent_search {
     margin-top: 20px;
     display: flex;
