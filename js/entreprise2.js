@@ -245,10 +245,16 @@ function ent_modifyLine(iLineToModify) {
 
     // si la modification est confirmée
     if (ent_modifyConfirm) {
-        // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
-        ent_arrayJS[iLineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-        ent_arrayJStoSplit[iLineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-
+        // si le nom de l'entreprise est au moins renseigné
+        if (ent_t_social.value != "") {
+            // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
+            ent_arrayJS[iLineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+            ent_arrayJStoSplit[iLineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
+        } else {
+            alert("Veuillez renseigner au moins le nom de l'entreprise...");
+            return;
+        }
         // on vide le tableau HTML
         ent_clearHTMLBoard();
         // on reconstruit le tableau HTML sans la ligne supprimée
