@@ -41,7 +41,7 @@ var ent_tbody = document.getElementById("ent_tbody");
 
                     // FONCTIONS //
 
-// fonction d'ajout de ligne dans le tableau
+// fonction d'ajout de ligne dans les tableaux JS
 function ent_addLine() {
     // création du nouveau tableau JS splité pour création du board HTML
     var ent_arraySplitted = new Array();
@@ -77,8 +77,8 @@ function ent_searchRaz() {
 }
 
 
-// fonction de sélection de ligne
-function ent_selectLine(iSelectedLine) {
+// fonction de récupération des informations de la ligne cliquée
+function ent_recupLine(iSelectedLine) {
     // création d'un tableau splité de la ligne cliquée
     var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
 
@@ -116,7 +116,7 @@ function ent_clearHTMLBoard() {
 }
 
 
-// fonction qui reconstruit le tableau HTML à partir des tableaux JS
+// fonction qui construit le tableau HTML à partir des tableaux JS
 function ent_buildHTMLBoard() {
     // variables locales
     var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
@@ -148,15 +148,15 @@ function ent_buildHTMLBoard() {
             ent_tbody.prepend(ent_lineBuild);
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-            // ajout d'une class pour affichage des icones sur les lignes
+            // ajout d'une classe pour affichage des icones sur les lignes
             ent_lineBuild.setAttribute("class", "ent_line");
 
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
                 // création des cellules
                 ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule autre que checkbox
-                ent_celBuild.setAttribute("onclick", "ent_selectLine(" + ent_iBuild + ")");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
                 ent_lineBuild.appendChild(ent_celBuild);
 
                 // remplissage des cellules avec le JS
@@ -165,12 +165,13 @@ function ent_buildHTMLBoard() {
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
             // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='../Test Local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine()' class='ent_pictoModify' />";
-            ent_celPicto.innerHTML += "<img src='../Test Local/img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
+            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
+    // si il existe plus de 6 entreprises
     } else {
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
         for (ent_iBuild=0; ent_iBuild<ent_arrayJS.length; ent_iBuild++) {
@@ -187,13 +188,19 @@ function ent_buildHTMLBoard() {
             for (i=0; i<ent_arrayToBuild.length; i++) {
                 // création des cellules
                 ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule autre que checkbox
-                ent_celBuild.setAttribute("onclick", "ent_selectLine(" + ent_iBuild + ")");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
                 ent_lineBuild.appendChild(ent_celBuild);
 
-                // remplissage des cellules avec le JS
+                // remplissage des cellules avec le tableau JS
                 ent_celBuild.textContent = ent_arrayToBuild[i];
             }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion des pictos pour supprimer et modifier une ligne
+            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
@@ -203,16 +210,32 @@ function ent_buildHTMLBoard() {
 }
 
 
+// fonction qui permet de supprimer une ligne
+function ent_delLine(iSelectedLine) {
+    // variables
+    var ent_delConfirm;
 
+    // on demande la confirmation pour la suppression de la ligne
+    ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?");
 
+    // si l'utilisateur confirme la suppression
+    if (ent_delConfirm) {
+        // suppression de la ligne concernée dans les tableaux JS
+        ent_arrayJS.splice(iSelectedLine, 1);
+        ent_arrayJStoSplit.splice(iSelectedLine, 1);
 
-// fonction qui permet de modifier une ligne
-function ent_modifyLine() {
-    console.log("Modify");
+        // on vide le tableau HTML
+        ent_clearHTMLBoard();
+        // on reconstruit le tableau HTML sans la ligne supprimée
+        ent_buildHTMLBoard();
+    // sinon fin de la fonction
+    } else {
+        return;
+    }
 }
 
 
-// fonction qui permet de supprimer une ligne
-function ent_delLine() {
-    console.log("delLine");
+// fonction qui permet de modifier une ligne
+function ent_modifyLine(iSelectedLine) {
+    
 }
