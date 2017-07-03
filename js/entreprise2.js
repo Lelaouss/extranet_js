@@ -211,7 +211,7 @@ function ent_buildHTMLBoard() {
 
 
 // fonction qui permet de supprimer une ligne
-function ent_delLine(iSelectedLine) {
+function ent_delLine(iLineToDel) {
     // variables
     var ent_delConfirm;
 
@@ -221,8 +221,8 @@ function ent_delLine(iSelectedLine) {
     // si l'utilisateur confirme la suppression
     if (ent_delConfirm) {
         // suppression de la ligne concernée dans les tableaux JS
-        ent_arrayJS.splice(iSelectedLine, 1);
-        ent_arrayJStoSplit.splice(iSelectedLine, 1);
+        ent_arrayJS.splice(iLineToDel, 1);
+        ent_arrayJStoSplit.splice(iLineToDel, 1);
 
         // on vide le tableau HTML
         ent_clearHTMLBoard();
@@ -236,6 +236,25 @@ function ent_delLine(iSelectedLine) {
 
 
 // fonction qui permet de modifier une ligne
-function ent_modifyLine(iSelectedLine) {
-    
+function ent_modifyLine(iLineToModify) {
+    // variables
+    var ent_modifyConfirm;
+
+    // on demande la confirmation de la modification de la ligne en la remplaçant par ce qu'il y a dans les champs de remplissage
+    ent_modifyConfirm = confirm("Êtes-vous sûr de vouloir modifier cette ligne en la remplaçant par les valeurs actuelles ?");
+
+    // si la modification est confirmée
+    if (ent_modifyConfirm) {
+        // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
+        ent_arrayJS[iLineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+        ent_arrayJStoSplit[iLineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+
+        // on vide le tableau HTML
+        ent_clearHTMLBoard();
+        // on reconstruit le tableau HTML sans la ligne supprimée
+        ent_buildHTMLBoard();        
+    // si la modification est annulée
+    } else {
+        return;
+    }
 }
