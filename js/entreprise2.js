@@ -286,7 +286,7 @@ function ent_modifyLine(iLineToModify) {
 // fonction de recherche dans le tableau HTML
 function ent_search() {
     // variables
-    var i, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
+    var i, undef, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
 
     // tableau de recherche
     var ent_arrayToDisplay = new Array();
@@ -296,103 +296,112 @@ function ent_search() {
     ent_activityToSearch = new RegExp(ent_t_searchActivity.value);
     ent_represNameToSearch = new RegExp(ent_t_searchRepre.value);
 
-    // on récupère seulement les données que l'on a besoin pour la recherche
-    for (i=0; i<ent_arrayJSToSplit.length; i++) {
-        if (ent_nameToSearch.test(ent_arrayJSToSplit[i])) {
-            ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
-            console.log(ent_arrayToDisplay);
+    // on compare la recherche de "raison sociale" aux données du tableau contenant les noms d'entreprises
+    for (i=0; i<ent_arraySearchName.length; i++) {
+        if (ent_nameToSearch.test(ent_arraySearchName[i])) {
+            // on stock le résultat de recherche dans un nouveau tableau JS
+            ent_arrayToDisplay[i] = ent_arraySearchName[i];
         }
     }
+    
+    // on filtre les éléments du tableau en enlevant les "undefined"
+    ent_arrayToDisplay = ent_arrayToDisplay.filter(function(val) {
+        if (val == undefined) {
+            return false;
+        }
+        return true;
+    });
+    console.log(ent_arrayToDisplay);
 
-    // // on vide le tableau HTML
-    // ent_clearHTMLBoard();
+    // on vide le tableau HTML
+    ent_clearHTMLBoard();
 
-    // // on regénère le tableau HTML à partir du tableau de recherche
-    // // tableau
-    // var ent_arrayToBuild = new Array();
-    // // variables locales
-    // var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
+    // on regénère le tableau HTML à partir du tableau de recherche
+    // tableau
+    var ent_arrayToBuild = new Array();
+    // variables locales
+    var j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
 
-    // // si il existe moins de 6 entreprises
-    // if (ent_arrayToFind.length < 6) {
-    //     // on reconstruit les lignes vides pour completer à 6 lignes au total
-    //     for (i=0; i<(6-ent_arrayToFind.length); i++) {
-    //         // création ligne HTML
-    //         ent_emptyLine = document.createElement("tr");
-    //         ent_tbody.appendChild(ent_emptyLine);
+    // si il existe moins de 6 entreprises
+    if (ent_arrayToDisplay.length < 6) {
+        // on reconstruit les lignes vides pour completer à 6 lignes au total
+        for (i=0; i<(6-ent_arrayToDisplay.length); i++) {
+            // création ligne HTML
+            ent_emptyLine = document.createElement("tr");
+            ent_tbody.appendChild(ent_emptyLine);
 
-    //         // création et ajout des cellules vides
-    //         for(j=0; j<9; j++) {
-    //             ent_emptyCel = document.createElement("td");
-    //             ent_emptyLine.appendChild(ent_emptyCel);
-    //         }
-    //     }
-    //     // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-    //     for (ent_iBuild=0; ent_iBuild<ent_arrayToFind.length; ent_iBuild++) {
-    //         // on découpe le tableau JS
-    //         ent_arrayToBuild = ent_arrayToFind[ent_iBuild].split("§");
+            // création et ajout des cellules vides
+            for(j=0; j<9; j++) {
+                ent_emptyCel = document.createElement("td");
+                ent_emptyLine.appendChild(ent_emptyCel);
+            }
+        }
+        // on reconstruit chaque ligne en HTML en parcourant le tableau JS
+        for (ent_iBuild=0; ent_iBuild<ent_arrayToDisplay.length; ent_iBuild++) {
+            // on découpe le tableau JS
+            ent_arrayToBuild = ent_arrayToDisplay[ent_iBuild].split("§");
 
-    //         // création de la ligne HTML
-    //         ent_lineBuild = document.createElement("tr");
-    //         ent_tbody.prepend(ent_lineBuild);
-    //         // ajout d'ID sur chaque ligne
-    //         ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-    //         // ajout d'une classe pour affichage des icones sur les lignes
-    //         ent_lineBuild.setAttribute("class", "ent_line");
+            // création de la ligne HTML
+            ent_lineBuild = document.createElement("tr");
+            ent_tbody.prepend(ent_lineBuild);
+            // ajout d'ID sur chaque ligne
+            ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
+            // ajout d'une classe pour affichage des icones sur les lignes
+            ent_lineBuild.setAttribute("class", "ent_line");
 
-    //         // on parcours le nouveau tableau splité pour remplir notre tableau HTML
-    //         for (i=0; i<ent_arrayToBuild.length; i++) {
-    //             // création des cellules
-    //             ent_celBuild = document.createElement("td");
-    //             // ajout de la détection de click sur chaque cellule
-    //             ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
-    //             ent_celBuild.setAttribute("class", "ent_cels");
-    //             ent_lineBuild.appendChild(ent_celBuild);
+            // on parcours le nouveau tableau splité pour remplir notre tableau HTML
+            for (i=0; i<ent_arrayToBuild.length; i++) {
+                // création des cellules
+                ent_celBuild = document.createElement("td");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
+                ent_lineBuild.appendChild(ent_celBuild);
 
-    //             // remplissage des cellules avec le JS
-    //             ent_celBuild.textContent = ent_arrayToBuild[i];
-    //         }
-    //         // création de la cellule pour les pictos
-    //         ent_celPicto = document.createElement("td");
-    //         // insertion des pictos pour supprimer et modifier une ligne
-    //         ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-    //         ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
-    //         ent_lineBuild.appendChild(ent_celPicto);
-    //     }
-    // // si il existe plus de 6 entreprises
-    // } else {
-    //     // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-    //     for (ent_iBuild=0; ent_iBuild<ent_arrayToFind.length; ent_iBuild++) {
-    //         // on découpe le tableau JS
-    //         ent_arrayToBuild = ent_arrayToFind[ent_iBuild].split("§");
+                // remplissage des cellules avec le JS
+                ent_celBuild.textContent = ent_arrayToBuild[i];
+            }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion des pictos pour supprimer et modifier une ligne
+            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
+        }
+    // si il existe plus de 6 entreprises
+    } else {
+        // on reconstruit chaque ligne en HTML en parcourant le tableau JS
+        for (ent_iBuild=0; ent_iBuild<ent_arrayToDisplay.length; ent_iBuild++) {
+            // on découpe le tableau JS
+            ent_arrayToBuild = ent_arrayToDisplay[ent_iBuild].split("§");
 
-    //         // création de la ligne HTML
-    //         ent_lineBuild = document.createElement("tr");
-    //         ent_tbody.prepend(ent_lineBuild);
-    //         // ajout d'ID sur chaque ligne
-    //         ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
+            // création de la ligne HTML
+            ent_lineBuild = document.createElement("tr");
+            ent_tbody.prepend(ent_lineBuild);
+            // ajout d'ID sur chaque ligne
+            ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
 
-    //         // on parcours le nouveau tableau splité pour remplir notre tableau HTML
-    //         for (i=0; i<ent_arrayToBuild.length; i++) {
-    //             // création des cellules
-    //             ent_celBuild = document.createElement("td");
-    //             // ajout de la détection de click sur chaque cellule
-    //             ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
-    //             ent_celBuild.setAttribute("class", "ent_cels");
-    //             ent_lineBuild.appendChild(ent_celBuild);
+            // on parcours le nouveau tableau splité pour remplir notre tableau HTML
+            for (i=0; i<ent_arrayToBuild.length; i++) {
+                // création des cellules
+                ent_celBuild = document.createElement("td");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
+                ent_lineBuild.appendChild(ent_celBuild);
 
-    //             // remplissage des cellules avec le tableau JS
-    //             ent_celBuild.textContent = ent_arrayToBuild[i];
-    //         }
-    //         // création de la cellule pour les pictos
-    //         ent_celPicto = document.createElement("td");
-    //         // insertion des pictos pour supprimer et modifier une ligne
-    //         ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-    //         ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
-    //         ent_lineBuild.appendChild(ent_celPicto);
-    //     }
-    // }
-    // // remise à zéro des champs
+                // remplissage des cellules avec le tableau JS
+                ent_celBuild.textContent = ent_arrayToBuild[i];
+            }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion des pictos pour supprimer et modifier une ligne
+            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
+        }
+    }
+    // remise à zéro des champs
     // ent_raz();
 
 
