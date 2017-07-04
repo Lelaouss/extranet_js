@@ -67,7 +67,9 @@ function ent_addLine() {
     // on vide le tableau HTML
     ent_clearHTMLBoard();
     // on le reconstruit à partir du tableau JS
-    ent_buildHTMLBoard();
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+    // on vide les champs de recherche
+    ent_searchRaz();
 }
 
 
@@ -125,7 +127,7 @@ function ent_clearHTMLBoard() {
 
 
 // fonction qui construit le tableau HTML à partir des tableaux JS
-function ent_buildHTMLBoard() {
+function ent_buildHTMLBoard(tableau) {
     // variables locales
     var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
 
@@ -133,9 +135,9 @@ function ent_buildHTMLBoard() {
     var ent_arrayToBuild = new Array();
 
     // si il existe moins de 6 entreprises
-    if (ent_arrayJS.length < 6) {
+    if (tableau.length < 6) {
         // on reconstruit les lignes vides pour completer à 6 lignes au total
-        for (i=0; i<(6-ent_arrayJS.length); i++) {
+        for (i=0; i<(6-tableau.length); i++) {
             // création ligne HTML
             ent_emptyLine = document.createElement("tr");
             ent_tbody.appendChild(ent_emptyLine);
@@ -147,9 +149,9 @@ function ent_buildHTMLBoard() {
             }
         }
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayJS.length; ent_iBuild++) {
+        for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
             // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayJSToSplit[ent_iBuild].split("§");
+            ent_arrayToBuild = tableau[ent_iBuild].split("§");
 
             // création de la ligne HTML
             ent_lineBuild = document.createElement("tr");
@@ -183,15 +185,17 @@ function ent_buildHTMLBoard() {
     // si il existe plus de 6 entreprises
     } else {
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayJS.length; ent_iBuild++) {
+        for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
             // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayJSToSplit[ent_iBuild].split("§");
+            ent_arrayToBuild = tableau[ent_iBuild].split("§");
 
             // création de la ligne HTML
             ent_lineBuild = document.createElement("tr");
             ent_tbody.prepend(ent_lineBuild);
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
+            // ajout d'une classe pour affichage des icones sur les lignes
+            ent_lineBuild.setAttribute("class", "ent_line");
 
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
@@ -240,7 +244,9 @@ function ent_delLine(iLineToDel) {
         // on vide le tableau HTML
         ent_clearHTMLBoard();
         // on reconstruit le tableau HTML sans la ligne supprimée
-        ent_buildHTMLBoard();
+        ent_buildHTMLBoard(ent_arrayJSToSplit);
+        // si on a une recherche en cours on la relance
+        ent_search();
     // sinon fin de la fonction
     } else {
         return;
@@ -275,8 +281,10 @@ function ent_modifyLine(iLineToModify) {
         // on vide le tableau HTML
         ent_clearHTMLBoard();
         // on reconstruit le tableau HTML sans la ligne supprimée
-        ent_buildHTMLBoard();        
-    // si la modification est annulée
+        ent_buildHTMLBoard(ent_arrayJSToSplit);
+        // si on a une recherche en cours on la relance
+        ent_search();    
+    // si la modification est annulée on arrête la fonction
     } else {
         return;
     }
@@ -286,23 +294,50 @@ function ent_modifyLine(iLineToModify) {
 // fonction de recherche dans le tableau HTML
 function ent_search() {
     // variables
-    var i, undef, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
+    var i, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
 
-    // tableau de recherche
+    // tableau de résultats de recherche
     var ent_arrayToDisplay = new Array();
 
     // récupération des valeurs se trouvant dans les champs de recherche
-    ent_nameToSearch = new RegExp(ent_t_searchName.value);
-    ent_activityToSearch = new RegExp(ent_t_searchActivity.value);
-    ent_represNameToSearch = new RegExp(ent_t_searchRepre.value);
+    ent_nameToSearch = new RegExp(ent_t_searchName.value, "i");
+    ent_activityToSearch = new RegExp(ent_t_searchActivity.value, "i");
+    ent_represNameToSearch = new RegExp(ent_t_searchRepre.value, "i");
 
-    // on compare la recherche de "raison sociale" aux données du tableau contenant les noms d'entreprises
-    for (i=0; i<ent_arraySearchName.length; i++) {
-        if (ent_nameToSearch.test(ent_arraySearchName[i])) {
-            // on stock le résultat de recherche dans un nouveau tableau JS
-            ent_arrayToDisplay[i] = ent_arraySearchName[i];
+    // on effectue la recherche soit dans les raisons sociales, soit dans les activités, soit dans les noms de représentants
+    if ((ent_t_searchRepre.value == "") && (ent_t_searchActivity.value == "")) {
+        // on compare la recherche de "raison sociale" entrée aux données du tableau contenant les noms d'entreprises
+        for (i=0; i<ent_arrayJSToSplit.length; i++) {
+            if (ent_nameToSearch.test(ent_arraySearchName[i])) {
+                // on stock le résultat de recherche dans un nouveau tableau JS
+                ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+            }
         }
     }
+
+    if ((ent_t_searchName.value == "") && (ent_t_searchActivity.value == "")) {
+        // on compare la recherche de "représentant" entrée aux données du tableau contenant les représentants
+        for (i=0; i<ent_arrayJSToSplit.length; i++) {
+            if (ent_represNameToSearch.test(ent_arraySearchRepresName[i])) {
+                // on stock le résultat de recherche dans un nouveau tableau JS
+                ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+            }
+        }
+    }
+
+    if ((ent_t_searchName.value == "") && (ent_t_searchRepre.value == "")) {
+        // on compare la recherche "d'activité" entrée aux données du tableau contenant les activités
+        for (i=0; i<ent_arrayJSToSplit.length; i++) {
+            if (ent_activityToSearch.test(ent_arraySearchActivity[i])) {
+                // on stock le résultat de recherche dans un nouveau tableau JS
+                ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+            }
+        }
+    }
+
+    // si une recherche a déjà été tapée
+
+
     
     // on filtre les éléments du tableau en enlevant les "undefined"
     ent_arrayToDisplay = ent_arrayToDisplay.filter(function(val) {
@@ -311,108 +346,41 @@ function ent_search() {
         }
         return true;
     });
-    console.log(ent_arrayToDisplay);
-
     // on vide le tableau HTML
     ent_clearHTMLBoard();
-
     // on regénère le tableau HTML à partir du tableau de recherche
-    // tableau
-    var ent_arrayToBuild = new Array();
-    // variables locales
-    var j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
-
-    // si il existe moins de 6 entreprises
-    if (ent_arrayToDisplay.length < 6) {
-        // on reconstruit les lignes vides pour completer à 6 lignes au total
-        for (i=0; i<(6-ent_arrayToDisplay.length); i++) {
-            // création ligne HTML
-            ent_emptyLine = document.createElement("tr");
-            ent_tbody.appendChild(ent_emptyLine);
-
-            // création et ajout des cellules vides
-            for(j=0; j<9; j++) {
-                ent_emptyCel = document.createElement("td");
-                ent_emptyLine.appendChild(ent_emptyCel);
-            }
-        }
-        // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayToDisplay.length; ent_iBuild++) {
-            // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayToDisplay[ent_iBuild].split("§");
-
-            // création de la ligne HTML
-            ent_lineBuild = document.createElement("tr");
-            ent_tbody.prepend(ent_lineBuild);
-            // ajout d'ID sur chaque ligne
-            ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-            // ajout d'une classe pour affichage des icones sur les lignes
-            ent_lineBuild.setAttribute("class", "ent_line");
-
-            // on parcours le nouveau tableau splité pour remplir notre tableau HTML
-            for (i=0; i<ent_arrayToBuild.length; i++) {
-                // création des cellules
-                ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule
-                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
-                ent_celBuild.setAttribute("class", "ent_cels");
-                ent_lineBuild.appendChild(ent_celBuild);
-
-                // remplissage des cellules avec le JS
-                ent_celBuild.textContent = ent_arrayToBuild[i];
-            }
-            // création de la cellule pour les pictos
-            ent_celPicto = document.createElement("td");
-            // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
-            ent_lineBuild.appendChild(ent_celPicto);
-        }
-    // si il existe plus de 6 entreprises
-    } else {
-        // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayToDisplay.length; ent_iBuild++) {
-            // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayToDisplay[ent_iBuild].split("§");
-
-            // création de la ligne HTML
-            ent_lineBuild = document.createElement("tr");
-            ent_tbody.prepend(ent_lineBuild);
-            // ajout d'ID sur chaque ligne
-            ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-
-            // on parcours le nouveau tableau splité pour remplir notre tableau HTML
-            for (i=0; i<ent_arrayToBuild.length; i++) {
-                // création des cellules
-                ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule
-                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
-                ent_celBuild.setAttribute("class", "ent_cels");
-                ent_lineBuild.appendChild(ent_celBuild);
-
-                // remplissage des cellules avec le tableau JS
-                ent_celBuild.textContent = ent_arrayToBuild[i];
-            }
-            // création de la cellule pour les pictos
-            ent_celPicto = document.createElement("td");
-            // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
-            ent_lineBuild.appendChild(ent_celPicto);
-        }
-    }
-    // remise à zéro des champs
-    // ent_raz();
-
-
-
-
-
+    ent_buildHTMLBoard(ent_arrayToDisplay);
 }
 
 
-// quand une lettre est tapée dans la recherche "Raison Sociale"
-// on split le ent_arrayJSToSplit dans un nouveau tableau de recherche
-// on compare ce qu'on a tapé à la valeur 0 de ce nouveau tableau
-    // on rempli un nouveau tableau dès qu'on trouve pour reconstruire ensuite le HTML à partir de là
 
+
+// fonction qui permet de gaver le tableau pour les tests
+function tester(social, represName, activity) {
+    // création du nouveau tableau JS splité pour création du board HTML
+    var ent_arraySplitted = new Array();
+
+    ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+    // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
+    ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
+    // on stock également les données spécifiques à nos champs de recherche
+    ent_arraySearchName[ent_numLines] = social;
+    ent_arraySearchRepresName[ent_numLines] = represName;
+    ent_arraySearchActivity[ent_numLines] = activity;
+    
+    // on vide le tableau HTML
+    ent_clearHTMLBoard();
+    // on le reconstruit à partir du tableau JS
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+    // on vide les champs de recherche
+    ent_searchRaz();
+}
+
+
+
+tester("javascript", "jean", "informatique");
+tester("css", "jean", "web");
+tester("html", "fabien", "web");
+tester("jquery", "seb", "informatique");
+tester("ajax", "seb", "web");
+tester("VueJS", "jack", "web");
