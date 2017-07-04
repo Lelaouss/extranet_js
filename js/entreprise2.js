@@ -2,6 +2,7 @@
 
 // Tableaux JS
 var ent_arrayJS = new Array();
+var ent_arrayJScopy = new Array();
 var ent_arrayJSToSplit = new Array();
 var ent_arraySearchName = new Array();
 var ent_arraySearchActivity = new Array();
@@ -59,9 +60,12 @@ function ent_addLine() {
         ent_arraySearchActivity[ent_numLines] = ent_t_activity.value;
         ent_arraySearchRepresName[ent_numLines] = ent_t_represName.value;
 
+        // copie du tableau JS global
+        ent_arrayJScopy = ent_arrayJS;
+
     // sinon on affiche un message d'alerte et on stop la fonction
     } else {
-        alert("Veuillez renseigner au moins le nom de l'entreprise...");
+        alert("Veuillez renseigner un nom d'entreprise");
         return;
     }
     // on vide le tableau HTML
@@ -90,7 +94,7 @@ function ent_searchRaz() {
 // fonction de récupération des informations de la ligne cliquée
 function ent_recupLine(iSelectedLine) {
     // création d'un tableau splité de la ligne cliquée
-    var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
+    var ent_arraySplittedSelected = ent_arrayJScopy[iSelectedLine].split("§");
 
     // remplissage des champs à partir des valeurs du tableau JS
     ent_t_social.value = ent_arraySplittedSelected[0];
@@ -241,6 +245,9 @@ function ent_delLine(iLineToDel) {
         ent_arraySearchActivity.splice(iLineToDel, 1);
         ent_arraySearchRepresName.splice(iLineToDel, 1);
 
+        // copie le tableau global
+        ent_arrayJScopy = ent_arrayJS;
+
         // on vide le tableau HTML
         ent_clearHTMLBoard();
         // on reconstruit le tableau HTML sans la ligne supprimée
@@ -273,9 +280,12 @@ function ent_modifyLine(iLineToModify) {
             ent_arraySearchActivity[iLineToModify] = ent_t_activity.value;
             ent_arraySearchRepresName[iLineToModify] = ent_t_represName.value;
 
+            // copie le tableau global
+            ent_arrayJScopy = ent_arrayJS;
+
         // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
         } else {
-            alert("Veuillez renseigner au moins le nom de l'entreprise...");
+            alert("Veuillez renseigner un nom d'entreprise");
             return;
         }
         // on vide le tableau HTML
@@ -299,6 +309,9 @@ function ent_search() {
     // tableau de résultats de recherche
     var ent_arrayToDisplay = new Array();
 
+    // réinitialisation de la copie du tableau global
+    ent_arrayJScopy = [];
+
     // récupération des valeurs se trouvant dans les champs de recherche
     ent_nameToSearch = new RegExp(ent_t_searchName.value, "i");
     ent_activityToSearch = new RegExp(ent_t_searchActivity.value, "i");
@@ -311,6 +324,7 @@ function ent_search() {
             if (ent_nameToSearch.test(ent_arraySearchName[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
     }
@@ -321,6 +335,7 @@ function ent_search() {
             if (ent_represNameToSearch.test(ent_arraySearchRepresName[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
     }
@@ -331,9 +346,10 @@ function ent_search() {
             if (ent_activityToSearch.test(ent_arraySearchActivity[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
-    }
+    }   
 
     // si une recherche a déjà été tapée
 
@@ -346,11 +362,26 @@ function ent_search() {
         }
         return true;
     });
+    ent_arrayJScopy = ent_arrayJScopy.filter(function(val) {
+        if (val == undefined) {
+            return false;
+        }
+        return true;
+    });
+    
     // on vide le tableau HTML
     ent_clearHTMLBoard();
     // on regénère le tableau HTML à partir du tableau de recherche
     ent_buildHTMLBoard(ent_arrayToDisplay);
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -367,6 +398,9 @@ function tester(social, represName, activity) {
     ent_arraySearchName[ent_numLines] = social;
     ent_arraySearchRepresName[ent_numLines] = represName;
     ent_arraySearchActivity[ent_numLines] = activity;
+
+    // copie du tableau JS global
+    ent_arrayJScopy = ent_arrayJS;
     
     // on vide le tableau HTML
     ent_clearHTMLBoard();
