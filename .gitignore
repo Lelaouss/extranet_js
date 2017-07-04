@@ -1,1 +1,4 @@
 img/Thumbs.db
+*.xml
+*.iml
+.idea/
