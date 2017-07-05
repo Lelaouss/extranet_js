@@ -60,8 +60,11 @@ th, td {
     opacity: 0.6;
 }
 
-.ent_pictoDelete:hover, .ent_pictoModify:hover {
+.ent_line:hover {
     cursor: pointer;
+}
+
+.ent_pictoDelete:hover, .ent_pictoModify:hover {
     opacity: 1;
 }
 
