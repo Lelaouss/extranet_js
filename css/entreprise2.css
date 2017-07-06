@@ -1,4 +1,4 @@
-                            /*Le tableau*/
+                                /*Le tableau*/
 #ent_companies {
     display: flex;
     justify-content: center;
@@ -32,6 +32,14 @@ tr {
 
 #ent_tbody tr:nth-child(2n) {
     background-color: #87BB34;
+}
+
+.ent_selected {
+    text-decoration: underline;
+}
+
+.ent_selected .ent_pictoDelete, .ent_selected .ent_pictoModify {
+    visibility: visible;
 }
 
 /*Les cellules*/
@@ -72,12 +80,7 @@ th, td {
     text-decoration: underline;
 }
 
-.ent_line:hover .ent_pictoDelete, .ent_line:hover .ent_pictoModify {
-    visibility: visible;
-}
-
-
-                        /*La recherche*/
+/*La recherche*/
 #ent_search {
     margin-top: 20px;
     display: flex;
@@ -89,7 +92,7 @@ th, td {
     height: 20px;
     background: url(../img/searchBackground.png) no-repeat;
     background-size: 10%;
-    background-position: 2% 1px; 
+    background-position: 2% 1px;
     padding-left: 27px;
 }
 
@@ -99,7 +102,15 @@ th, td {
     outline-width: 1px;
 }
 
-                            /*Le formulaire*/
+                    /*La div d'affichage d'indications*/
+#ent_indications {
+    border: 1px solid red;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+
+                                /*Le formulaire*/
 
 /*Les trois fieldset*/
 #ent_form {
@@ -109,6 +120,7 @@ th, td {
 #ent_coordonneesTotal {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 /*Les champs*/
@@ -163,6 +175,20 @@ th, td {
     margin-top: 20px;
 }
 
-#ent_buttons button {
-    margin-left: 10px;
+input[type="button"] {
+    padding: 10px 20px;
+    text-decoration: none;
+    font-family: Verdana, Arial;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+}
+
+#ent_reset {
+    margin-left: 5px;
+}
+
+.ent_hide {
+    display: none;
 }
