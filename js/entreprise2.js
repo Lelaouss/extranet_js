@@ -10,6 +10,10 @@ var ent_arraySearchRepresName = new Array();
 
 // Compteur de lignes du tableau HTML
 var ent_numLines = 0;
+// Compteur de lignes cliquées sur le tableau HTML
+var ent_nbClickedLines = 0;
+// Stockage de l'indice de la ligne sélectionnée
+var ent_selectedLine;
 
 // Récupération des champs de saisies
 var ent_t_social = document.getElementById("ent_t_social");
@@ -39,6 +43,8 @@ var ent_t_searchRepre = document.getElementById("ent_t_searchRepre");
 
 // Récupération du tbody HTML
 var ent_tbody = document.getElementById("ent_tbody");
+// Récupération de la div d'affichage d'indications pour l'utilisateur
+var ent_indications = document.getElementById("ent_indications");
 
 
 
@@ -93,6 +99,8 @@ function ent_searchRaz() {
 
 // fonction de récupération des informations de la ligne cliquée
 function ent_recupLine(iSelectedLine) {
+    // variables
+    var ent_clickedLine;
     // création d'un tableau splité de la ligne cliquée
     var ent_arraySplittedSelected = ent_arrayJScopy[iSelectedLine].split("§");
 
@@ -116,6 +124,48 @@ function ent_recupLine(iSelectedLine) {
     ent_t_tutorPrenom.value = ent_arraySplittedSelected[16];
     ent_t_tutorMail.value = ent_arraySplittedSelected[17];
     ent_t_tutorTel.value = ent_arraySplittedSelected[18];
+
+    // mise en évidence la ligne sélectionnée
+    // récupération de la ligne cliquée sur le tableau HTML
+    ent_clickedLine = document.getElementById("ent_line"+iSelectedLine);
+
+    // si aucune autre ligne n'est déjà sélectionnée
+    if (ent_nbClickedLines == 0) {
+        // ajout de la classe à la ligne
+        ent_clickedLine.classList.toggle("ent_selected");
+        // on stock l'indice de la ligne cliquée
+        ent_selectedLine = iSelectedLine;
+        // incrémentation du compteur de lignes sélectionnées
+        ent_nbClickedLines++;
+        // affichage du bouton modifier
+        document.getElementById("ent_modifier").classList.toggle("ent_hide");
+        // masquage du bouton ajouter
+        document.getElementById("ent_ajouter").classList.toggle("ent_hide");
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.textContent = "Vous êtes en train d'éditer l'entreprise: "+ent_t_social.value;
+    // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
+    } else if ((ent_nbClickedLines == 1) && (ent_selectedLine != iSelectedLine)) {
+        // on enleve la classe selected à la ligne déjà sélectionnée
+        document.getElementById("ent_line"+ent_selectedLine).classList.remove("ent_selected");
+        // ajout de la classe à la nouvelle ligne sélectionnée
+        ent_clickedLine.classList.toggle("ent_selected");
+        // on stock l'indice de la nouvelle ligne sélectionnée
+        ent_selectedLine = iSelectedLine;
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.textContent = "Vous êtes en train d'éditer l'entreprise: "+ent_t_social.value;
+    // sinon si la ligne sélectionnée est la même que la selection en cours
+    } else if ((ent_nbClickedLines == 1) && (ent_selectedLine == iSelectedLine)) {
+        // on enlève la classe
+        ent_clickedLine.classList.toggle("ent_selected");
+        // masquage du bouton modifier
+        document.getElementById("ent_modifier").classList.toggle("ent_hide");
+        // affichage du bouton ajouter
+        document.getElementById("ent_ajouter").classList.toggle("ent_hide");
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.textContent = "";
+        // réinitialisation du nombres de lignes sélectionnées
+        ent_nbClickedLines = 0;
+    }
 }
 
 
@@ -223,6 +273,12 @@ function ent_buildHTMLBoard(tableau) {
             ent_numLines++;
         }
     }
+    // on réinitialise le nombre de lignes sélectionnées
+    ent_nbClickedLines = 0;
+    // masquage du bouton modifier
+    document.getElementById("ent_modifier").classList.add("ent_hide");
+    // affichage du bouton ajouter
+    document.getElementById("ent_ajouter").classList.remove("ent_hide");
     // remise à zéro des champs
     ent_raz();
 }
@@ -247,6 +303,10 @@ function ent_delLine(iLineToDel) {
 
         // copie le tableau global
         ent_arrayJScopy = ent_arrayJS;
+
+        console.log(ent_arrayJSToSplit);
+        var line = iLineToDel;
+        console.log("ligne:"+line);
 
         // on vide le tableau HTML
         ent_clearHTMLBoard();
@@ -293,7 +353,7 @@ function ent_modifyLine(iLineToModify) {
         // on reconstruit le tableau HTML sans la ligne supprimée
         ent_buildHTMLBoard(ent_arrayJSToSplit);
         // si on a une recherche en cours on la relance
-        ent_search();    
+        ent_search();
     // si la modification est annulée on arrête la fonction
     } else {
         return;
@@ -349,22 +409,6 @@ function ent_search() {
             }
         }
     }
-
-    // // si une recherche a déjà été tapée
-    // if (ent_arrayToDisplay.length < ent_arrayJSToSplit.length) {
-    //     // on compare la recherche tapée à ce que l'on a dans le tableau de filtrage
-    //     for (i=0; i<ent_arrayToDisplay.length; i++) {
-    //         if (ent_represNameToSearch.test(ent_arraySearchRepresName[i])) {
-    //             // on stock le résultat de recherche dans un nouveau tableau JS
-    //             ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
-    //             // on copie le tableau global pour que la selection fonctionne toujours
-    //             ent_arrayJScopy[i] = ent_arrayJS[i];
-    //         }
-    //     }
-    // }
-
-
-
     
     // on filtre les éléments des tableaux en enlevant les "undefined"
     ent_arrayToDisplay = ent_arrayToDisplay.filter(function(val) {
@@ -384,16 +428,7 @@ function ent_search() {
     ent_clearHTMLBoard();
     // on regénère le tableau HTML à partir du tableau de recherche
     ent_buildHTMLBoard(ent_arrayToDisplay);
-    // passage du tableau de filtrage en variable globale
-    // window["ent_arrayToDisplay"] = ent_arrayToDisplay;
 }
-
-
-
-
-
-
-
 
 
 
@@ -424,7 +459,7 @@ function tester(social, represName, activity) {
 }
 
 
-
+// valeurs pour tester à supprimer plus tard
 tester("javascript", "jean", "informatique");
 tester("css", "jean", "web");
 tester("html", "fabien", "web");
