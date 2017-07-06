@@ -306,7 +306,7 @@ function ent_search() {
     // variables
     var i, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
 
-    // tableau de résultats de recherche
+    // initialisation du tableau de résultats de recherche
     var ent_arrayToDisplay = new Array();
 
     // réinitialisation de la copie du tableau global
@@ -324,38 +324,49 @@ function ent_search() {
             if (ent_nameToSearch.test(ent_arraySearchName[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                // on copie le tableau global pour que la selection fonctionne toujours
                 ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
-    }
-
-    if ((ent_t_searchName.value == "") && (ent_t_searchActivity.value == "")) {
+    } else if ((ent_t_searchName.value == "") && (ent_t_searchActivity.value == "")) {
         // on compare la recherche de "représentant" entrée aux données du tableau contenant les représentants
         for (i=0; i<ent_arrayJSToSplit.length; i++) {
             if (ent_represNameToSearch.test(ent_arraySearchRepresName[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                // on copie le tableau global pour que la selection fonctionne toujours
                 ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
-    }
-
-    if ((ent_t_searchName.value == "") && (ent_t_searchRepre.value == "")) {
+    } else if ((ent_t_searchName.value == "") && (ent_t_searchRepre.value == "")) {
         // on compare la recherche "d'activité" entrée aux données du tableau contenant les activités
         for (i=0; i<ent_arrayJSToSplit.length; i++) {
             if (ent_activityToSearch.test(ent_arraySearchActivity[i])) {
                 // on stock le résultat de recherche dans un nouveau tableau JS
                 ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+                // on copie le tableau global pour que la selection fonctionne toujours
                 ent_arrayJScopy[i] = ent_arrayJS[i];
             }
         }
-    }   
+    }
 
-    // si une recherche a déjà été tapée
+    // // si une recherche a déjà été tapée
+    // if (ent_arrayToDisplay.length < ent_arrayJSToSplit.length) {
+    //     // on compare la recherche tapée à ce que l'on a dans le tableau de filtrage
+    //     for (i=0; i<ent_arrayToDisplay.length; i++) {
+    //         if (ent_represNameToSearch.test(ent_arraySearchRepresName[i])) {
+    //             // on stock le résultat de recherche dans un nouveau tableau JS
+    //             ent_arrayToDisplay[i] = ent_arrayJSToSplit[i];
+    //             // on copie le tableau global pour que la selection fonctionne toujours
+    //             ent_arrayJScopy[i] = ent_arrayJS[i];
+    //         }
+    //     }
+    // }
+
 
 
     
-    // on filtre les éléments du tableau en enlevant les "undefined"
+    // on filtre les éléments des tableaux en enlevant les "undefined"
     ent_arrayToDisplay = ent_arrayToDisplay.filter(function(val) {
         if (val == undefined) {
             return false;
@@ -373,6 +384,8 @@ function ent_search() {
     ent_clearHTMLBoard();
     // on regénère le tableau HTML à partir du tableau de recherche
     ent_buildHTMLBoard(ent_arrayToDisplay);
+    // passage du tableau de filtrage en variable globale
+    // window["ent_arrayToDisplay"] = ent_arrayToDisplay;
 }
 
 
