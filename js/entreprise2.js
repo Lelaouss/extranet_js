@@ -1,4 +1,4 @@
-                // VARIABLES GLOBALES //
+// VARIABLES GLOBALES //
 
 // Tableaux JS
 var ent_arrayJS = new Array();
@@ -38,8 +38,8 @@ var ent_t_tutorTel = document.getElementById("ent_t_tutorTel");
 
 // Récupération des champs de recherche
 var ent_t_searchName = document.getElementById("ent_t_searchName");
-var ent_t_searchActivity = document.getElementById("ent_t_searchActivity");
 var ent_t_searchRepre = document.getElementById("ent_t_searchRepre");
+var ent_t_searchActivity = document.getElementById("ent_t_searchActivity");
 
 // Récupération du tbody HTML
 var ent_tbody = document.getElementById("ent_tbody");
@@ -49,7 +49,7 @@ var ent_indications = document.getElementById("ent_indications");
 
 
 
-                    // FONCTIONS //
+// FONCTIONS //
 
 // fonction d'ajout de ligne dans les tableaux JS
 function ent_addLine() {
@@ -69,7 +69,7 @@ function ent_addLine() {
         // copie du tableau JS global
         ent_arrayJScopy = ent_arrayJS;
 
-    // sinon on affiche un message d'alerte et on stop la fonction
+        // sinon on affiche un message d'alerte et on stop la fonction
     } else {
         alert("Veuillez renseigner un nom d'entreprise");
         return;
@@ -142,8 +142,8 @@ function ent_recupLine(iSelectedLine) {
         // masquage du bouton ajouter
         document.getElementById("ent_ajouter").classList.toggle("ent_hide");
         // indication à l'utilisateur sur l'entreprise en cours d'édition
-        ent_indications.textContent = "Vous êtes en train d'éditer l'entreprise: "+ent_t_social.value;
-    // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
+        ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine != iSelectedLine)) {
         // on enleve la classe selected à la ligne déjà sélectionnée
         document.getElementById("ent_line"+ent_selectedLine).classList.remove("ent_selected");
@@ -152,8 +152,8 @@ function ent_recupLine(iSelectedLine) {
         // on stock l'indice de la nouvelle ligne sélectionnée
         ent_selectedLine = iSelectedLine;
         // indication à l'utilisateur sur l'entreprise en cours d'édition
-        ent_indications.textContent = "Vous êtes en train d'éditer l'entreprise: "+ent_t_social.value;
-    // sinon si la ligne sélectionnée est la même que la selection en cours
+        ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // sinon si la ligne sélectionnée est la même que la selection en cours
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine == iSelectedLine)) {
         // on enlève la classe
         ent_clickedLine.classList.toggle("ent_selected");
@@ -162,7 +162,7 @@ function ent_recupLine(iSelectedLine) {
         // affichage du bouton ajouter
         document.getElementById("ent_ajouter").classList.toggle("ent_hide");
         // indication à l'utilisateur sur l'entreprise en cours d'édition
-        ent_indications.textContent = "";
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
         // réinitialisation du nombres de lignes sélectionnées
         ent_nbClickedLines = 0;
     }
@@ -230,13 +230,13 @@ function ent_buildHTMLBoard(tableau) {
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
             // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_celPicto.innerHTML = "<img src='img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
-    // si il existe plus de 6 entreprises
+        // si il existe plus de 6 entreprises
     } else {
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
         for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
@@ -266,8 +266,8 @@ function ent_buildHTMLBoard(tableau) {
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
             // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='../local/img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
-            ent_celPicto.innerHTML += "<img src='../local/img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_celPicto.innerHTML = "<img src='img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
@@ -314,7 +314,7 @@ function ent_delLine(iLineToDel) {
         ent_buildHTMLBoard(ent_arrayJSToSplit);
         // si on a une recherche en cours on la relance
         ent_search();
-    // sinon fin de la fonction
+        // sinon fin de la fonction
     } else {
         return;
     }
@@ -343,7 +343,7 @@ function ent_modifyLine(iLineToModify) {
             // copie le tableau global
             ent_arrayJScopy = ent_arrayJS;
 
-        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
+            // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
         } else {
             alert("Veuillez renseigner un nom d'entreprise");
             return;
@@ -354,15 +354,104 @@ function ent_modifyLine(iLineToModify) {
         ent_buildHTMLBoard(ent_arrayJSToSplit);
         // si on a une recherche en cours on la relance
         ent_search();
-    // si la modification est annulée on arrête la fonction
+        // si la modification est annulée on arrête la fonction
     } else {
         return;
     }
 }
 
 
+// fonction qui permet le retour en mode ajout d'entreprise
+function ent_reinitialize() {
+    // nettoyage de la zone d'indication d'édition
+    ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+    // nettoyage du tableau HTML
+    ent_clearHTMLBoard();
+    // vidage des champs de recherche
+    ent_searchRaz();
+    // reconstruction du tableau HTML
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+}
+
+
 // fonction de recherche dans le tableau HTML
 function ent_search() {
+    var aOfFinal= [];
+    var aOfTemp= [];
+    var aOfNameFound= [];
+    var aOfRepreFound= [];
+    var aOfActivityFound= [];
+    var i;
+
+    for (i=0; i<ent_arrayJSToSplit.length; i++) {
+        aOfTemp= ent_arrayJSToSplit[i].toLowerCase().split("§");
+        if ( ((ent_t_searchName.value != "") && (aOfTemp[0].indexOf(ent_t_searchName.value.toLowerCase()) != -1)) || (ent_t_searchName.value == "") )   {
+            aOfNameFound.push(i);
+        }
+        if ( ((ent_t_searchRepre.value != "") && (aOfTemp[5].indexOf(ent_t_searchRepre.value.toLowerCase()) != -1)) || (ent_t_searchRepre.value == "") )    {
+            aOfRepreFound.push(i);
+        }
+        if ( ((ent_t_searchActivity.value != "") && (aOfTemp[6].indexOf(ent_t_searchActivity.value.toLowerCase()) != -1)) || (ent_t_searchActivity.value == "") )   {
+            aOfActivityFound.push(i);
+        }
+    }
+
+    var sListRepreFound= "|" + aOfRepreFound.join("|") + "|";
+    var sListActivityFound= "|" + aOfActivityFound.join("|") + "|";
+
+    for (i=0; i<aOfNameFound.length; i++)   {
+        if ( (sListRepreFound.indexOf("|"+aOfNameFound[i]+"|") != -1) && (sListActivityFound.indexOf("|"+aOfNameFound[i]+"|") != -1) )  {
+            aOfFinal.push(ent_arrayJSToSplit[aOfNameFound[i]]);
+        }
+    }
+    // nettoyage du tableau HTML
+    ent_clearHTMLBoard();
+    // reconstruction du tableau avec le filtre
+    ent_buildHTMLBoard(aOfFinal);
+}
+
+
+// fonction qui permet de gaver le tableau pour les tests
+function tester(social, represName, activity) {
+    // création du nouveau tableau JS splité pour création du board HTML
+    var ent_arraySplitted = new Array();
+
+    ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+    // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
+    ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
+    // on stock également les données spécifiques à nos champs de recherche
+    ent_arraySearchName[ent_numLines] = social;
+    ent_arraySearchRepresName[ent_numLines] = represName;
+    ent_arraySearchActivity[ent_numLines] = activity;
+
+    // copie du tableau JS global
+    ent_arrayJScopy = ent_arrayJS;
+
+    // on vide le tableau HTML
+    ent_clearHTMLBoard();
+    // on le reconstruit à partir du tableau JS
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+    // on vide les champs de recherche
+    ent_searchRaz();
+}
+
+
+// valeurs pour tester à supprimer plus tard
+tester("javascript", "jean", "informatique");
+tester("css", "jean", "web");
+tester("html", "fabien", "web");
+tester("jquery", "seb", "informatique");
+tester("ajax", "seb", "web");
+tester("VueJS", "jack", "web");
+
+
+
+
+
+
+
+// A REVOIR....
+function ent_search2() {
     // variables
     var i, ent_nameToSearch, ent_activityToSearch, ent_represNameToSearch;
 
@@ -409,7 +498,7 @@ function ent_search() {
             }
         }
     }
-    
+
     // on filtre les éléments des tableaux en enlevant les "undefined"
     ent_arrayToDisplay = ent_arrayToDisplay.filter(function(val) {
         if (val == undefined) {
@@ -423,46 +512,9 @@ function ent_search() {
         }
         return true;
     });
-    
+
     // on vide le tableau HTML
     ent_clearHTMLBoard();
     // on regénère le tableau HTML à partir du tableau de recherche
     ent_buildHTMLBoard(ent_arrayToDisplay);
 }
-
-
-
-
-
-// fonction qui permet de gaver le tableau pour les tests
-function tester(social, represName, activity) {
-    // création du nouveau tableau JS splité pour création du board HTML
-    var ent_arraySplitted = new Array();
-
-    ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-    // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
-    ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
-    // on stock également les données spécifiques à nos champs de recherche
-    ent_arraySearchName[ent_numLines] = social;
-    ent_arraySearchRepresName[ent_numLines] = represName;
-    ent_arraySearchActivity[ent_numLines] = activity;
-
-    // copie du tableau JS global
-    ent_arrayJScopy = ent_arrayJS;
-    
-    // on vide le tableau HTML
-    ent_clearHTMLBoard();
-    // on le reconstruit à partir du tableau JS
-    ent_buildHTMLBoard(ent_arrayJSToSplit);
-    // on vide les champs de recherche
-    ent_searchRaz();
-}
-
-
-// valeurs pour tester à supprimer plus tard
-tester("javascript", "jean", "informatique");
-tester("css", "jean", "web");
-tester("html", "fabien", "web");
-tester("jquery", "seb", "informatique");
-tester("ajax", "seb", "web");
-tester("VueJS", "jack", "web");

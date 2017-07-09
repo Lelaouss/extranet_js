@@ -1,4 +1,5 @@
-                                /*Le tableau*/
+/*Le tableau*/
+
 #ent_companies {
     display: flex;
     justify-content: center;
@@ -80,6 +81,8 @@ th, td {
     text-decoration: underline;
 }
 
+
+
 /*La recherche*/
 #ent_search {
     margin-top: 20px;
@@ -102,15 +105,31 @@ th, td {
     outline-width: 1px;
 }
 
-                    /*La div d'affichage d'indications*/
-#ent_indications {
-    border: 1px solid red;
-    margin-top: 20px;
+/*La div d'affichage d'indications*/
+
+#ent_message {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
     font-size: 1.2em;
 }
 
+#ent_indications {
+    margin: 0;
+    height: 39px;
+}
 
-                                /*Le formulaire*/
+#ent_socialName {
+    font-weight: bold;
+    font-style: italic;
+}
+
+#ent_retour {
+    margin: 0;
+}
+
+
+/*Le formulaire*/
 
 /*Les trois fieldset*/
 #ent_form {
