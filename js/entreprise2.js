@@ -218,8 +218,7 @@ function ent_buildHTMLBoard(tableau) {
             }
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
-            // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            // insertion du picto pour supprimer une ligne
             ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
@@ -254,8 +253,7 @@ function ent_buildHTMLBoard(tableau) {
             }
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
-            // insertion des pictos pour supprimer et modifier une ligne
-            ent_celPicto.innerHTML = "<img src='img/ent_modify.png' alt='Modify' onclick='ent_modifyLine(" + ent_iBuild + ")' class='ent_pictoModify' />";
+            // insertion du picto pour supprimer une ligne
             ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes

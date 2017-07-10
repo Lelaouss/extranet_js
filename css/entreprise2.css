@@ -39,7 +39,7 @@ tr {
     text-decoration: underline;
 }
 
-.ent_selected .ent_pictoDelete, .ent_selected .ent_pictoModify {
+.ent_selected .ent_pictoDelete {
     visibility: visible;
 }
 
@@ -57,14 +57,6 @@ th, td {
     width: 16px;
     height: 18px;
     padding-top: 4px;
-    margin-left: 10px;
-    visibility: hidden;
-    opacity: 0.6;
-}
-
-.ent_pictoModify {
-    width: 20px;
-    height: auto;
     visibility: hidden;
     opacity: 0.6;
 }
@@ -73,7 +65,7 @@ th, td {
     cursor: pointer;
 }
 
-.ent_pictoDelete:hover, .ent_pictoModify:hover {
+.ent_pictoDelete:hover {
     opacity: 1;
 }
 
