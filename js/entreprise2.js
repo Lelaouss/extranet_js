@@ -9,7 +9,7 @@ var ent_numLines = 0;
 // Compteur de lignes cliquées sur le tableau HTML
 var ent_nbClickedLines = 0;
 // Stockage de l'indice de la ligne sélectionnée
-var ent_selectedLine;
+var ent_selectedLine, ent_indice;
 
 // Récupération des champs de saisies
 var ent_t_social = document.getElementById("ent_t_social");
@@ -178,8 +178,6 @@ function ent_recupLine(iSelectedLine) {
 }
 
 
-
-
 // fonction qui vide le tableau HTML
 function ent_clearHTMLBoard() {
     // on supprime tous les éléments enfants du tbody
@@ -241,7 +239,7 @@ function ent_buildHTMLBoard(tableau) {
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
             // insertion du picto pour supprimer une ligne
-            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
@@ -276,7 +274,7 @@ function ent_buildHTMLBoard(tableau) {
             // création de la cellule pour les pictos
             ent_celPicto = document.createElement("td");
             // insertion du picto pour supprimer une ligne
-            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine(" + ent_iBuild + ")' class='ent_pictoDelete' />";
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
             ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
@@ -294,7 +292,7 @@ function ent_buildHTMLBoard(tableau) {
 
 
 // fonction qui permet de supprimer une ligne
-function ent_delLine(iLineToDel) {
+function ent_delLine() {
     // variables
     var ent_delConfirm;
 
@@ -304,8 +302,8 @@ function ent_delLine(iLineToDel) {
     // si l'utilisateur confirme la suppression
     if (ent_delConfirm) {
         // suppression de la ligne concernée dans les tableaux JS
-        ent_arrayJS.splice(iLineToDel, 1);
-        ent_arrayJSToSplit.splice(iLineToDel, 1);
+        ent_arrayJS.splice(ent_indice, 1);
+        ent_arrayJSToSplit.splice(ent_indice, 1);
 
         // on vide le tableau HTML
         ent_clearHTMLBoard();
@@ -321,7 +319,7 @@ function ent_delLine(iLineToDel) {
 
 
 // fonction qui permet de modifier une ligne
-function ent_modifyLine(iLineToModify) {
+function ent_modifyLine() {
     // variables
     var ent_modifyConfirm;
 
@@ -333,8 +331,8 @@ function ent_modifyLine(iLineToModify) {
         // si le nom de l'entreprise est au moins renseigné
         if (ent_t_social.value != "") {
             // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
-            ent_arrayJS[iLineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-            ent_arrayJSToSplit[iLineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+            ent_arrayJSToSplit[ent_indice] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
 
         // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
         } else {
