@@ -53,11 +53,16 @@ function ent_addLine() {
     var ent_arraySplitted = new Array();
 
     // remplissage du tableau JS globale si la raison sociale de l'entreprise est au minimum renseignée
-    if (ent_t_social.value != "") {
+    // cas quand aucune recherche n'est en cours (filtres désactivés)
+    if ((ent_t_social.value != "") && (ent_t_searchName.value == "") && (ent_t_searchRepre.value == "") && (ent_t_searchActivity.value == "")) {
         ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
         ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-        
+    // cas quand les filtres sont activés
+    } else if (ent_t_social.value != "") {
+        ent_arrayJS[ent_arrayJS.length] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+        // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
+        ent_arrayJSToSplit[ent_arrayJSToSplit.length] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
     // sinon on affiche un message d'alerte et on stop la fonction
     } else {
         alert("Veuillez renseigner un nom d'entreprise");
@@ -89,17 +94,17 @@ function ent_searchRaz() {
 // fonction de récupération des informations de la ligne cliquée
 function ent_recupLine(iSelectedLine) {
     // variables
-    var i, ent_clickedLine, ent_nameClicked, ent_arrayTemp;
+    var i, ent_clickedLine, ent_arrayTemp;
 
-    // récupération de la raison sociale de la ligne cliquée
-    ent_nameClicked = document.getElementById("ent_line"+iSelectedLine).firstChild.textContent;
+    // récupération des éléments la ligne cliquée
+    var ent_childClicked = document.getElementById("ent_line"+iSelectedLine).children;
 
     // on cherche dans le tableau JS les correspondance avec la raison sociale de ligne cliquée
     for (i=0; i<ent_arrayJS.length; i++) {
         // on stocke à chaque tour chaque élément de chaque ligne dans un tableau temporaire
         ent_arrayTemp = ent_arrayJSToSplit[i].split("§");
         // quand le nom dans le la ligne HTML cliquée correspond à un nom présent dans le tableau JS
-        if (ent_nameClicked == ent_arrayTemp[0]) {
+        if ((ent_childClicked[0].textContent == ent_arrayTemp[0]) && (ent_childClicked[2].textContent == ent_arrayTemp[2])) {
             // on conserve l'indice de la ligne
             ent_indice = i;
         }   
@@ -394,16 +399,9 @@ function ent_search() {
         }
     }
 
-    console.log(ent_arrayNameFound);
-    console.log(ent_arrayRepresFound);
-    console.log(ent_arrayActivityFound);
-
     // on ajoute des "|" avant et après les indices pour ne pas avoir de soucis de correspondance entre chiffres et nombres
     ent_listRepresFound = "|" + ent_arrayRepresFound.join("|") + "|";
     ent_listActivityFound = "|" + ent_arrayActivityFound.join("|") + "|";
-
-    console.log(ent_listRepresFound);
-    console.log(ent_listActivityFound);
 
     // on boucle sur le tableau contenant les indices de correspondance de noms
     for (i=0; i<ent_arrayNameFound.length; i++) {
@@ -414,7 +412,6 @@ function ent_search() {
         }
     }
 
-    // console.log(ent_arrayFinal);
     // nettoyage du tableau HTML
     ent_clearHTMLBoard();
     // reconstruction du tableau en appliquant le filtre
