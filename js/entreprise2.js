@@ -89,11 +89,26 @@ function ent_searchRaz() {
 // fonction de récupération des informations de la ligne cliquée
 function ent_recupLine(iSelectedLine) {
     // variables
-    var ent_clickedLine;
-    // création d'un tableau splité de la ligne cliquée
-    var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
+    var i, ent_clickedLine, ent_nameClicked, ent_arrayTemp;
 
-    // remplissage des champs à partir des valeurs du tableau JS
+    // récupération de la raison sociale de la ligne cliquée
+    ent_nameClicked = document.getElementById("ent_line"+iSelectedLine).firstChild.textContent;
+
+    // on cherche dans le tableau JS les correspondance avec la raison sociale de ligne cliquée
+    for (i=0; i<ent_arrayJS.length; i++) {
+        // on stocke à chaque tour chaque élément de chaque ligne dans un tableau temporaire
+        ent_arrayTemp = ent_arrayJSToSplit[i].split("§");
+        // quand le nom dans le la ligne HTML cliquée correspond à un nom présent dans le tableau JS
+        if (ent_nameClicked == ent_arrayTemp[0]) {
+            // on conserve l'indice de la ligne
+            ent_indice = i;
+        }   
+    }
+
+    // création d'un tableau splité de la ligne cliquée
+    var ent_arraySplittedSelected = ent_arrayJS[ent_indice].split("§");
+
+    // remplissage des champs à partir des valeurs du tableau JS de la ligne cliquée
     ent_t_social.value = ent_arraySplittedSelected[0];
     ent_t_mail.value = ent_arraySplittedSelected[1];
     ent_t_phone.value = ent_arraySplittedSelected[2];
@@ -156,6 +171,8 @@ function ent_recupLine(iSelectedLine) {
         ent_nbClickedLines = 0;
     }
 }
+
+
 
 
 // fonction qui vide le tableau HTML
