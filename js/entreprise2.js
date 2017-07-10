@@ -2,11 +2,7 @@
 
 // Tableaux JS
 var ent_arrayJS = new Array();
-var ent_arrayJScopy = new Array();
 var ent_arrayJSToSplit = new Array();
-var ent_arraySearchName = new Array();
-var ent_arraySearchActivity = new Array();
-var ent_arraySearchRepresName = new Array();
 
 // Compteur de lignes du tableau HTML
 var ent_numLines = 0;
@@ -61,15 +57,8 @@ function ent_addLine() {
         ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
         ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-        // on stock également les données spécifiques à nos champs de recherche
-        ent_arraySearchName[ent_numLines] = ent_t_social.value;
-        ent_arraySearchActivity[ent_numLines] = ent_t_activity.value;
-        ent_arraySearchRepresName[ent_numLines] = ent_t_represName.value;
-
-        // copie du tableau JS global
-        ent_arrayJScopy = ent_arrayJS;
-
-        // sinon on affiche un message d'alerte et on stop la fonction
+        
+    // sinon on affiche un message d'alerte et on stop la fonction
     } else {
         alert("Veuillez renseigner un nom d'entreprise");
         return;
@@ -102,7 +91,7 @@ function ent_recupLine(iSelectedLine) {
     // variables
     var ent_clickedLine;
     // création d'un tableau splité de la ligne cliquée
-    var ent_arraySplittedSelected = ent_arrayJScopy[iSelectedLine].split("§");
+    var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
 
     // remplissage des champs à partir des valeurs du tableau JS
     ent_t_social.value = ent_arraySplittedSelected[0];
@@ -297,16 +286,6 @@ function ent_delLine(iLineToDel) {
         // suppression de la ligne concernée dans les tableaux JS
         ent_arrayJS.splice(iLineToDel, 1);
         ent_arrayJSToSplit.splice(iLineToDel, 1);
-        ent_arraySearchName.splice(iLineToDel, 1);
-        ent_arraySearchActivity.splice(iLineToDel, 1);
-        ent_arraySearchRepresName.splice(iLineToDel, 1);
-
-        // copie le tableau global
-        ent_arrayJScopy = ent_arrayJS;
-
-        console.log(ent_arrayJSToSplit);
-        var line = iLineToDel;
-        console.log("ligne:"+line);
 
         // on vide le tableau HTML
         ent_clearHTMLBoard();
@@ -336,14 +315,8 @@ function ent_modifyLine(iLineToModify) {
             // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
             ent_arrayJS[iLineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
             ent_arrayJSToSplit[iLineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-            ent_arraySearchName[iLineToModify] = ent_t_social.value;
-            ent_arraySearchActivity[iLineToModify] = ent_t_activity.value;
-            ent_arraySearchRepresName[iLineToModify] = ent_t_represName.value;
 
-            // copie le tableau global
-            ent_arrayJScopy = ent_arrayJS;
-
-            // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
+        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
         } else {
             alert("Veuillez renseigner un nom d'entreprise");
             return;
@@ -376,38 +349,61 @@ function ent_reinitialize() {
 
 // fonction de recherche dans le tableau HTML
 function ent_search() {
-    var aOfFinal= [];
-    var aOfTemp= [];
-    var aOfNameFound= [];
-    var aOfRepreFound= [];
-    var aOfActivityFound= [];
-    var i;
+    // variables
+    var i, ent_listRepresFound, ent_listActivityFound;
+    // tableaux de filtrage
+    var ent_arrayTemp = new Array();
+    var ent_arrayFinal = new Array();
+    var ent_arrayNameFound = new Array();
+    var ent_arrayRepresFound = new Array();
+    var ent_arrayActivityFound = new Array();
 
+    // on boucle sur le tableau d'affichage JS
     for (i=0; i<ent_arrayJSToSplit.length; i++) {
-        aOfTemp= ent_arrayJSToSplit[i].toLowerCase().split("§");
-        if ( ((ent_t_searchName.value != "") && (aOfTemp[0].indexOf(ent_t_searchName.value.toLowerCase()) != -1)) || (ent_t_searchName.value == "") )   {
-            aOfNameFound.push(i);
+        // on stocke à chaque tour chaque élément de chaque ligne dans un tableau temporaire
+        ent_arrayTemp = ent_arrayJSToSplit[i].toLowerCase().split("§");
+        // si la recherche de nom d'entreprise est remplie et qu'elle a une correspondance avec un des éléments "Raison Sociale" du tableau temporaire OU si la recherche raison sociale est vide
+        if (((ent_t_searchName.value != "") && (ent_arrayTemp[0].indexOf(ent_t_searchName.value.toLowerCase()) != -1)) || (ent_t_searchName.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances de noms
+            ent_arrayNameFound.push(i);
         }
-        if ( ((ent_t_searchRepre.value != "") && (aOfTemp[5].indexOf(ent_t_searchRepre.value.toLowerCase()) != -1)) || (ent_t_searchRepre.value == "") )    {
-            aOfRepreFound.push(i);
+        // si la recherche de représentants d'entreprise est remplie et qu'elle a une correspondance avec un des éléments "Nom du représentant" du tableau temporaire OU si la recherche de représentant est vide
+        if (((ent_t_searchRepre.value != "") && (ent_arrayTemp[5].indexOf(ent_t_searchRepre.value.toLowerCase()) != -1)) || (ent_t_searchRepre.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances de noms de représentants
+            ent_arrayRepresFound.push(i);
         }
-        if ( ((ent_t_searchActivity.value != "") && (aOfTemp[6].indexOf(ent_t_searchActivity.value.toLowerCase()) != -1)) || (ent_t_searchActivity.value == "") )   {
-            aOfActivityFound.push(i);
+        // si la recherche d'activité est remplie et qu'elle a une correspondance avec un des éléments "Activités" du tableau temporaire OU si la recherche d'activités est vide
+        if (((ent_t_searchActivity.value != "") && (ent_arrayTemp[6].indexOf(ent_t_searchActivity.value.toLowerCase()) != -1)) || (ent_t_searchActivity.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances des activités
+            ent_arrayActivityFound.push(i);
         }
     }
 
-    var sListRepreFound= "|" + aOfRepreFound.join("|") + "|";
-    var sListActivityFound= "|" + aOfActivityFound.join("|") + "|";
+    console.log(ent_arrayNameFound);
+    console.log(ent_arrayRepresFound);
+    console.log(ent_arrayActivityFound);
 
-    for (i=0; i<aOfNameFound.length; i++)   {
-        if ( (sListRepreFound.indexOf("|"+aOfNameFound[i]+"|") != -1) && (sListActivityFound.indexOf("|"+aOfNameFound[i]+"|") != -1) )  {
-            aOfFinal.push(ent_arrayJSToSplit[aOfNameFound[i]]);
+    // on ajoute des "|" avant et après les indices pour ne pas avoir de soucis de correspondance entre chiffres et nombres
+    ent_listRepresFound = "|" + ent_arrayRepresFound.join("|") + "|";
+    ent_listActivityFound = "|" + ent_arrayActivityFound.join("|") + "|";
+
+    console.log(ent_listRepresFound);
+    console.log(ent_listActivityFound);
+
+    // on boucle sur le tableau contenant les indices de correspondance de noms
+    for (i=0; i<ent_arrayNameFound.length; i++) {
+        // si il y a correspondance des indices des noms de représentants et correspondance des indices des activités avec les indices des raisons sociales
+        if ((ent_listRepresFound.indexOf("|"+ent_arrayNameFound[i]+"|") != -1) && (ent_listActivityFound.indexOf("|"+ent_arrayNameFound[i]+"|") != -1)) {
+            // on ajoute les entrées au tableau final de filtrage
+            ent_arrayFinal.push(ent_arrayJSToSplit[ent_arrayNameFound[i]]);
         }
     }
+
+    // console.log(ent_arrayFinal);
     // nettoyage du tableau HTML
     ent_clearHTMLBoard();
-    // reconstruction du tableau avec le filtre
-    ent_buildHTMLBoard(aOfFinal);
+    // reconstruction du tableau en appliquant le filtre
+    ent_buildHTMLBoard(ent_arrayFinal);
 }
 
 
@@ -419,13 +415,6 @@ function tester(social, represName, activity) {
     ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
     // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
     ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
-    // on stock également les données spécifiques à nos champs de recherche
-    ent_arraySearchName[ent_numLines] = social;
-    ent_arraySearchRepresName[ent_numLines] = represName;
-    ent_arraySearchActivity[ent_numLines] = activity;
-
-    // copie du tableau JS global
-    ent_arrayJScopy = ent_arrayJS;
 
     // on vide le tableau HTML
     ent_clearHTMLBoard();
