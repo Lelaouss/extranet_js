@@ -311,6 +311,8 @@ function ent_delLine() {
         ent_buildHTMLBoard(ent_arrayJSToSplit);
         // si on a une recherche en cours on la relance
         ent_search();
+        // nettoyage de la zone d'indication d'édition
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
         // sinon fin de la fonction
     } else {
         return;
@@ -345,6 +347,8 @@ function ent_modifyLine() {
         ent_buildHTMLBoard(ent_arrayJSToSplit);
         // si on a une recherche en cours on la relance
         ent_search();
+        // nettoyage de la zone d'indication d'édition
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
         // si la modification est annulée on arrête la fonction
     } else {
         return;
