@@ -1,16 +1,20 @@
-                            /*Le tableau*/
+/*Le tableau*/
+
 #ent_companies {
     display: flex;
     justify-content: center;
+	padding-right: 18px;
 }
 
-#ent_companies fieldset {
-    width: 100%;
-}
-
+/*la mise en page globale du tableau*/
 #ent_board {
     border-collapse: collapse;
     text-align: center;
+    width: 100%;
+}
+
+/*le fieldset du tableau*/
+#ent_companies fieldset {
     width: 100%;
 }
 
@@ -32,11 +36,47 @@ tr {
     background-color: #87BB34;
 }
 
+.ent_selected {
+    text-decoration: underline;
+}
+
+.ent_selected .ent_pictoDelete {
+    visibility: visible;
+}
+
+/*Les cellules*/
 th, td {
     height: 29px;
 }
 
-                        /*La selection, recherche*/
+/*La cellule contenant les pictos de suppression et modification*/
+#ent_pictures {
+    width: 50px;
+}
+
+.ent_pictoDelete {
+    width: 16px;
+    height: 18px;
+    padding-top: 4px;
+    visibility: hidden;
+    opacity: 0.6;
+}
+
+.ent_line:hover {
+    cursor: pointer;
+}
+
+.ent_pictoDelete:hover {
+    opacity: 1;
+}
+
+.ent_line:hover .ent_cels {
+    text-decoration: underline;
+}
+
+
+
+/*La recherche*/
 #ent_search {
     margin-top: 20px;
     display: flex;
@@ -46,9 +86,9 @@ th, td {
 #ent_searchInputs input {
     border: 1px solid #87BB34;
     height: 20px;
-    background: url(../img/searchBackground.png) no-repeat;
+    background: url(../img/ent_search.png) no-repeat;
     background-size: 10%;
-    background-position: 2% 1px; 
+    background-position: 2% 1px;
     padding-left: 27px;
 }
 
@@ -58,16 +98,43 @@ th, td {
     outline-width: 1px;
 }
 
-                            /*Le formulaire*/
+/*La div d'affichage d'indications*/
+
+#ent_message {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    font-size: 1.2em;
+	padding-right: 18px;
+}
+
+#ent_indications {
+    margin: 0;
+    height: 39px;
+}
+
+#ent_socialName {
+    font-weight: bold;
+    font-style: italic;
+}
+
+#ent_retour {
+    margin: 0;
+}
+
+
+/*Le formulaire*/
 
 /*Les trois fieldset*/
 #ent_form {
     margin-top: 20px;
+	padding-right: 18px;
 }
 
 #ent_coordonneesTotal {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 /*Les champs*/
@@ -82,12 +149,13 @@ th, td {
 }
 
 /*Le bloc nom, activité et adresse*/
-#ent_coordonneesDiv, #ent_repreDiv, #ent_TutorDiv {
+#ent_coordonneesDiv, #ent_repreDiv, #ent_ActivItyDiv {
     display: flex;
+    flex-wrap: wrap;
     font-size: 0.8em;
 }
 
-#ent_repreDiv legend, #ent_TutorDiv legend {
+#ent_repreDiv legend, #ent_ActivItyDiv legend {
     font-size: 1.2em;
 }
 
@@ -122,6 +190,20 @@ th, td {
     margin-top: 20px;
 }
 
-#ent_buttons button {
-    margin-left: 10px;
+.ent_button {
+    padding: 10px 20px;
+    text-decoration: none;
+    font-family: Verdana, Arial;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+}
+
+#ent_reset {
+    margin-left: 5px;
+}
+
+.ent_hide {
+    display: none;
 }

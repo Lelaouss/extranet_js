@@ -1,11 +1,15 @@
-                // VARIABLES GLOBALES //
+// VARIABLES GLOBALES //
 
 // Tableaux JS
 var ent_arrayJS = new Array();
-var ent_arrayJStoSplit = new Array();
+var ent_arrayJSToSplit = new Array();
 
 // Compteur de lignes du tableau HTML
 var ent_numLines = 0;
+// Compteur de lignes cliquées sur le tableau HTML
+var ent_nbClickedLines = 0;
+// Stockage de l'indice de la ligne sélectionnée
+var ent_selectedLine, ent_indice;
 
 // Récupération des champs de saisies
 var ent_t_social = document.getElementById("ent_t_social");
@@ -30,37 +34,46 @@ var ent_t_tutorTel = document.getElementById("ent_t_tutorTel");
 
 // Récupération des champs de recherche
 var ent_t_searchName = document.getElementById("ent_t_searchName");
-var ent_t_searchActivity = document.getElementById("ent_t_searchActivity");
 var ent_t_searchRepre = document.getElementById("ent_t_searchRepre");
+var ent_t_searchActivity = document.getElementById("ent_t_searchActivity");
 
 // Récupération du tbody HTML
 var ent_tbody = document.getElementById("ent_tbody");
+// Récupération de la div d'affichage d'indications pour l'utilisateur
+var ent_indications = document.getElementById("ent_indications");
 
 
 
 
-                    // FONCTIONS //
+// FONCTIONS //
 
-// fonction d'ajout de ligne dans le tableau
+// fonction d'ajout de ligne dans les tableaux JS
 function ent_addLine() {
     // création du nouveau tableau JS splité pour création du board HTML
     var ent_arraySplitted = new Array();
 
     // remplissage du tableau JS globale si la raison sociale de l'entreprise est au minimum renseignée
-    if (ent_t_social.value != "") {
+    // cas quand aucune recherche n'est en cours (filtres désactivés)
+    if ((ent_t_social.value != "") && (ent_t_searchName.value == "") && (ent_t_searchRepre.value == "") && (ent_t_searchActivity.value == "")) {
         ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
-        ent_arrayJStoSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+        ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+    // cas quand les filtres sont activés
+    } else if (ent_t_social.value != "") {
+        ent_arrayJS[ent_arrayJS.length] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+        // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
+        ent_arrayJSToSplit[ent_arrayJSToSplit.length] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
     // sinon on affiche un message d'alerte et on stop la fonction
     } else {
-        alert("Veuillez renseigner au moins le nom de l'entreprise...");
+        alert("Veuillez renseigner un nom d'entreprise");
         return;
     }
-    ////////////////////////
-    // ent_arraySplitted = ent_arrayJStoSplit[ent_numLines].split("§");
-
+    // on vide le tableau HTML
     ent_clearHTMLBoard();
-    ent_buildHTMLBoard();
+    // on le reconstruit à partir du tableau JS
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+    // on vide les champs de recherche
+    ent_searchRaz();
 }
 
 
@@ -75,18 +88,34 @@ function ent_raz() {
 function ent_searchRaz() {
     // on vide les champs de recherche
     ent_t_searchName.value = ent_t_searchActivity.value = ent_t_searchRepre.value = "";
+    // indication à l'utilisateur sur l'entreprise en cours d'édition
+    ent_indications.textContent = "Aucune entreprise en cours d'édition.";
 }
 
 
-// fonction de sélection de ligne
-function ent_selectLine(iSelectedLine) {
-    // récupération de la checkbox de la ligne cliquée
-    var ent_checkBoxLine = document.getElementById("ent_chkCompanie"+iSelectedLine);
+// fonction de récupération des informations de la ligne cliquée
+function ent_recupLine(iSelectedLine) {
+    // variables
+    var i, ent_clickedLine, ent_arrayTemp;
+
+    // récupération des éléments la ligne cliquée
+    var ent_childClicked = document.getElementById("ent_line"+iSelectedLine).children;
+
+    // on cherche dans le tableau JS les correspondance avec la raison sociale de ligne cliquée
+    for (i=0; i<ent_arrayJS.length; i++) {
+        // on stocke à chaque tour chaque élément de chaque ligne dans un tableau temporaire
+        ent_arrayTemp = ent_arrayJSToSplit[i].split("§");
+        // quand le nom dans le la ligne HTML cliquée correspond à un nom présent dans le tableau JS
+        if ((ent_childClicked[0].textContent == ent_arrayTemp[0]) && (ent_childClicked[2].textContent == ent_arrayTemp[2])) {
+            // on conserve l'indice de la ligne
+            ent_indice = i;
+        }   
+    }
 
     // création d'un tableau splité de la ligne cliquée
-    var ent_arraySplittedSelected = ent_arrayJS[iSelectedLine].split("§");
+    var ent_arraySplittedSelected = ent_arrayJS[ent_indice].split("§");
 
-    // remplissage des champs à partir des valeurs du tableau JS
+    // remplissage des champs à partir des valeurs du tableau JS de la ligne cliquée
     ent_t_social.value = ent_arraySplittedSelected[0];
     ent_t_mail.value = ent_arraySplittedSelected[1];
     ent_t_phone.value = ent_arraySplittedSelected[2];
@@ -106,39 +135,47 @@ function ent_selectLine(iSelectedLine) {
     ent_t_tutorPrenom.value = ent_arraySplittedSelected[16];
     ent_t_tutorMail.value = ent_arraySplittedSelected[17];
     ent_t_tutorTel.value = ent_arraySplittedSelected[18];
-    
-    // cochage de la checkbox de la ligne
-    if (ent_checkBoxLine.checked == false) {
-        ent_checkBoxLine.checked = true;
-    } else {
-        ent_checkBoxLine.checked = false;
-    }
-    // cochage de la checkbox d'en tête si besoin
-    ent_buttonDisplay();
-}
 
+    // mise en évidence la ligne sélectionnée
+    // récupération de la ligne cliquée sur le tableau HTML
+    ent_clickedLine = document.getElementById("ent_line"+iSelectedLine);
 
-// fonction qui permet de cocher ou décocher toutes les checkbox
-function ent_selectAll() {
-    // variables
-    var i;
-
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
-
-    // tableau contenant toutes les checkbox
-    var ent_selectedLines = new Array;
-    ent_selectedLines = document.getElementsByName("ent_chkCompanie");
-
-    // on parcours tous les éléments checkbox du tableau HTML
-    for (i=0; i<ent_numLines; i++) {
-        // si la checkbox d'en tête est sélectionné elle check toutes les autres
-        if (ent_checkHead.checked) {
-            ent_selectedLines[i].checked = true;
-        // sinon si on la décoche elle décoche toutes les autres
-        } else if (!ent_checkHead.checked) {
-            ent_selectedLines[i].checked = false;
-        }
+    // si aucune autre ligne n'est déjà sélectionnée
+    if (ent_nbClickedLines == 0) {
+        // ajout de la classe à la ligne
+        ent_clickedLine.classList.toggle("ent_selected");
+        // on stock l'indice de la ligne cliquée
+        ent_selectedLine = iSelectedLine;
+        // incrémentation du compteur de lignes sélectionnées
+        ent_nbClickedLines++;
+        // affichage du bouton modifier
+        document.getElementById("ent_modifier").classList.toggle("ent_hide");
+        // masquage du bouton ajouter
+        document.getElementById("ent_ajouter").classList.toggle("ent_hide");
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
+    } else if ((ent_nbClickedLines == 1) && (ent_selectedLine != iSelectedLine)) {
+        // on enleve la classe selected à la ligne déjà sélectionnée
+        document.getElementById("ent_line"+ent_selectedLine).classList.remove("ent_selected");
+        // ajout de la classe à la nouvelle ligne sélectionnée
+        ent_clickedLine.classList.toggle("ent_selected");
+        // on stock l'indice de la nouvelle ligne sélectionnée
+        ent_selectedLine = iSelectedLine;
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // sinon si la ligne sélectionnée est la même que la selection en cours
+    } else if ((ent_nbClickedLines == 1) && (ent_selectedLine == iSelectedLine)) {
+        // on enlève la classe
+        ent_clickedLine.classList.toggle("ent_selected");
+        // masquage du bouton modifier
+        document.getElementById("ent_modifier").classList.toggle("ent_hide");
+        // affichage du bouton ajouter
+        document.getElementById("ent_ajouter").classList.toggle("ent_hide");
+        // indication à l'utilisateur sur l'entreprise en cours d'édition
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+        // réinitialisation du nombres de lignes sélectionnées
+        ent_nbClickedLines = 0;
     }
 }
 
@@ -149,27 +186,23 @@ function ent_clearHTMLBoard() {
     while (ent_tbody.firstChild) {
         ent_tbody.removeChild(ent_tbody.firstChild);
     }
-
     // remise à zéro du compteur de lignes des tableaux
     ent_numLines = 0;
 }
-            
 
-// fonction qui reconstruit le tableau HTML à partir des tableaux JS
-function ent_buildHTMLBoard() {
+
+// fonction qui construit le tableau HTML à partir des tableaux JS
+function ent_buildHTMLBoard(tableau) {
     // variables locales
-    var i, j, ent_iBuild, ent_lineBuild, celChkBoxBuild, chkBoxBuild, ent_celBuild, ent_emptyLine, ent_emptyCel;
+    var i, j, ent_iBuild, ent_lineBuild, ent_celBuild, ent_emptyLine, ent_emptyCel, ent_celPicto;
 
     // tableau
     var ent_arrayToBuild = new Array();
 
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
-
     // si il existe moins de 6 entreprises
-    if (ent_arrayJS.length < 6) {
+    if (tableau.length < 6) {
         // on reconstruit les lignes vides pour completer à 6 lignes au total
-        for (i=0; i<(6-ent_arrayJS.length); i++) {
+        for (i=0; i<(6-tableau.length); i++) {
             // création ligne HTML
             ent_emptyLine = document.createElement("tr");
             ent_tbody.appendChild(ent_emptyLine);
@@ -181,208 +214,237 @@ function ent_buildHTMLBoard() {
             }
         }
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayJS.length; ent_iBuild++) {
+        for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
             // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayJStoSplit[ent_iBuild].split("§");
+            ent_arrayToBuild = tableau[ent_iBuild].split("§");
 
             // création de la ligne HTML
             ent_lineBuild = document.createElement("tr");
             ent_tbody.prepend(ent_lineBuild);
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-
-            // création de la cellule de checkbox
-            celChkBoxBuild = document.createElement("td");
-            celChkBoxBuild.setAttribute("class", "ent_celCheckBox");
-            chkBoxBuild = document.createElement("input");
-            chkBoxBuild.setAttribute("type", "checkbox");
-            chkBoxBuild.setAttribute("name", "ent_chkCompanie");
-            chkBoxBuild.setAttribute("onclick", "ent_buttonDisplay()");
-            // ajout d'ID sur chaque checkbox
-            chkBoxBuild.setAttribute("id", "ent_chkCompanie"+ent_iBuild);
-            // ajout de value sur chaque checkbox
-            chkBoxBuild.setAttribute("value", ent_iBuild);
-            ent_lineBuild.appendChild(celChkBoxBuild).appendChild(chkBoxBuild);
+            // ajout d'une classe pour affichage des icones sur les lignes
+            ent_lineBuild.setAttribute("class", "ent_line");
 
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
                 // création des cellules
                 ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule autre que checkbox
-                ent_celBuild.setAttribute("onclick", "ent_selectLine(" + ent_iBuild + ")");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
                 ent_lineBuild.appendChild(ent_celBuild);
 
                 // remplissage des cellules avec le JS
                 ent_celBuild.textContent = ent_arrayToBuild[i];
             }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion du picto pour supprimer une ligne
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
+        // si il existe plus de 6 entreprises
     } else {
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
-        for (ent_iBuild=0; ent_iBuild<ent_arrayJS.length; ent_iBuild++) {
+        for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
             // on découpe le tableau JS
-            ent_arrayToBuild = ent_arrayJStoSplit[ent_iBuild].split("§");
+            ent_arrayToBuild = tableau[ent_iBuild].split("§");
 
             // création de la ligne HTML
             ent_lineBuild = document.createElement("tr");
             ent_tbody.prepend(ent_lineBuild);
             // ajout d'ID sur chaque ligne
             ent_lineBuild.setAttribute("id", "ent_line"+ent_iBuild);
-
-            // création de la cellule de checkbox
-            celChkBoxBuild = document.createElement("td");
-            celChkBoxBuild.setAttribute("class", "ent_celCheckBox");
-            chkBoxBuild = document.createElement("input");
-            chkBoxBuild.setAttribute("type", "checkbox");
-            chkBoxBuild.setAttribute("name", "ent_chkCompanie");
-            chkBoxBuild.setAttribute("onclick", "ent_buttonDisplay()");
-            // ajout d'ID sur chaque checkbox
-            chkBoxBuild.setAttribute("id", "ent_chkCompanie"+ent_iBuild);
-            // ajout de value sur chaque checkbox
-            chkBoxBuild.setAttribute("value", ent_iBuild);
-            ent_lineBuild.appendChild(celChkBoxBuild).appendChild(chkBoxBuild);
+            // ajout d'une classe pour affichage des icones sur les lignes
+            ent_lineBuild.setAttribute("class", "ent_line");
 
             // on parcours le nouveau tableau splité pour remplir notre tableau HTML
             for (i=0; i<ent_arrayToBuild.length; i++) {
                 // création des cellules
                 ent_celBuild = document.createElement("td");
-                // ajout de la détection de click sur chaque cellule autre que checkbox
-                ent_celBuild.setAttribute("onclick", "ent_selectLine(" + ent_iBuild + ")");
+                // ajout de la détection de click sur chaque cellule
+                ent_celBuild.setAttribute("onclick", "ent_recupLine(" + ent_iBuild + ")");
+                ent_celBuild.setAttribute("class", "ent_cels");
                 ent_lineBuild.appendChild(ent_celBuild);
 
-                // remplissage des cellules avec le JS
+                // remplissage des cellules avec le tableau JS
                 ent_celBuild.textContent = ent_arrayToBuild[i];
             }
+            // création de la cellule pour les pictos
+            ent_celPicto = document.createElement("td");
+            // insertion du picto pour supprimer une ligne
+            ent_celPicto.innerHTML += "<img src='img/ent_trash.png' alt='Delete' onclick='ent_delLine()' class='ent_pictoDelete' />";
+            ent_lineBuild.appendChild(ent_celPicto);
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
     }
-    // on décoche la checkbox d'en tête si elle est cochée
-    if (ent_checkHead.checked) {
-        ent_checkHead.checked = false;
-    }
+    // on réinitialise le nombre de lignes sélectionnées
+    ent_nbClickedLines = 0;
+    // masquage du bouton modifier
+    document.getElementById("ent_modifier").classList.add("ent_hide");
+    // affichage du bouton ajouter
+    document.getElementById("ent_ajouter").classList.remove("ent_hide");
     // remise à zéro des champs
     ent_raz();
 }
 
 
-// fonction qui permet de supprimer une ou plusieurs entrées
+// fonction qui permet de supprimer une ligne
 function ent_delLine() {
     // variables
-    var i, ent_selectedLines, ent_linesToDel, ent_delConfirm;
-    var ent_numTbodyCheckboxChecked = 0;
+    var ent_delConfirm;
 
-    // on récupère toutes les checkbox
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
+    // on demande la confirmation pour la suppression de la ligne
+    ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?");
 
-    // on consulte les checkbox cochées
-    for (i=0; i<ent_allTbodyCheckbox.length; i++) {
-        if (ent_allTbodyCheckbox[i].checked) {
-            ent_numTbodyCheckboxChecked++;
-        }
-    }
-    // si il y a plusieurs lignes de cochées
-    if (ent_numTbodyCheckboxChecked > 1) {
-        // on demande la confirmation de la suppression des lignes sélectionnées
-        ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer ces lignes ?");
-    } else {
-        // on demande la confirmation de la suppression de la ligne sélectionnée
-        ent_delConfirm = confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?");
-    }
+    // si l'utilisateur confirme la suppression
+    if (ent_delConfirm) {
+        // suppression de la ligne concernée dans les tableaux JS
+        ent_arrayJS.splice(ent_indice, 1);
+        ent_arrayJSToSplit.splice(ent_indice, 1);
 
-    // si l'utilisateur annule la suppression de ligne
-    if (ent_delConfirm == false) {
-        // on stoppe la suppression
-        return;
-    // si il la confirme
-    } else {
-        // on parcours le nombre de checkbox et on récupère la value de celles qui sont cochées
-        for (i=0; i<ent_numLines; i++) {
-            ent_selectedLines = ent_allTbodyCheckbox[i];
-            if (ent_selectedLines.checked) {
-                // récupération de la value de la ligne sélectionnée
-                ent_linesToDel = ent_selectedLines.value;
-                // on supprime la ligne équivalente à la ligne à supprimer dans les tableaux JS
-                ent_arrayJS.splice(ent_linesToDel, 1);
-                ent_arrayJStoSplit.splice(ent_linesToDel, 1);
-            }        
-        }
         // on vide le tableau HTML
         ent_clearHTMLBoard();
-        // on regénère notre tableau HTML avec la ou les ligne(s) en moins
-        ent_buildHTMLBoard();
-    }
-}
-        
-
-// fonction qui gère l'affiche des boutons du formulaire et le cochage de la checkbox d'en tête
-function ent_buttonDisplay() {
-    // variables locales
-    var i, ent_selectedLines;
-
-    // compteur de checkbox cochées
-    var ent_nbCheckedLines = 0;
-
-    // récupération de la checkbox d'en tête
-    var ent_checkHead = document.getElementById("ent_chk_head");
-
-    // récupération de toutes les checkbox du tbody
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
-
-    // on parcours les checkbox du tbody et on récupère le nombre de checkbox cochées
-    for (i=0; i<ent_numLines; i++) {
-        ent_selectedLines = ent_allTbodyCheckbox[i];
-        // si une ligne est cochée on incrémente le compteur de checkbox cochées
-        if (ent_selectedLines.checked) {
-            ent_nbCheckedLines++;
-        }
-    }
-
-    // si toutes les lignes sont cochées (au moins une), on coche la checkbox d'en tête
-    if ((ent_nbCheckedLines == ent_numLines) && (ent_nbCheckedLines > 0)) {
-        ent_checkHead.checked = true;
-    // sinon on la décoche
+        // on reconstruit le tableau HTML sans la ligne supprimée
+        ent_buildHTMLBoard(ent_arrayJSToSplit);
+        // si on a une recherche en cours on la relance
+        ent_search();
+        // nettoyage de la zone d'indication d'édition
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+        // sinon fin de la fonction
     } else {
-        ent_checkHead.checked = false;
+        return;
     }
 }
 
 
-// fonction qui permet de modifier une ligne sélectionnée
+// fonction qui permet de modifier une ligne
 function ent_modifyLine() {
-    // variables locales
-    var i, ent_selectedLines, ent_lineToModify, ent_modifyConfirm;
+    // variables
+    var ent_modifyConfirm;
 
-    // récupération de toutes les checkbox du tbody
-    var ent_allTbodyCheckbox = new Array();
-    ent_allTbodyCheckbox = document.getElementsByName("ent_chkCompanie");
+    // on demande la confirmation de la modification de la ligne en la remplaçant par ce qu'il y a dans les champs de remplissage
+    ent_modifyConfirm = confirm("Êtes-vous sûr de vouloir modifier cette ligne en la remplaçant par les valeurs actuelles ?");
 
-    // on demande la confirmation de modifier la ligne sélectionnée
-    ent_modifyConfirm = confirm("Êtes-vous sûr de vouloir modifier cette ligne ?");
+    // si la modification est confirmée
+    if (ent_modifyConfirm) {
+        // si le nom de l'entreprise est au moins renseigné
+        if (ent_t_social.value != "") {
+            // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
+            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+            ent_arrayJSToSplit[ent_indice] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
 
-    // si l'utilisateur annule la modification
-    if (ent_modifyConfirm == false) {
-        // on stop la fonction
-        return;
-    // sinon si il confirme la modification
-    } else {
-        // on parcours le nombre de checkbox et on récupère la value de celle qui est cochée
-        for (i=(ent_numLines-1); i>=0; i--) {
-            ent_selectedLines = ent_allTbodyCheckbox[i];
-            if (ent_selectedLines.checked) {
-                // récupération de la value de la ligne sélectionnée
-                ent_lineToModify = ent_selectedLines.value;
-                // on change les valeurs de la ligne à modifier dans les tableaux JS par celles contenues dans les champs input
-                ent_arrayJS[ent_lineToModify] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-                ent_arrayJStoSplit[ent_lineToModify] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
-            }
+        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
+        } else {
+            alert("Veuillez renseigner un nom d'entreprise");
+            return;
         }
         // on vide le tableau HTML
         ent_clearHTMLBoard();
-        // on regénère notre tableau HTML avec la ligne modifiée
-        ent_buildHTMLBoard();
+        // on reconstruit le tableau HTML sans la ligne supprimée
+        ent_buildHTMLBoard(ent_arrayJSToSplit);
+        // si on a une recherche en cours on la relance
+        ent_search();
+        // nettoyage de la zone d'indication d'édition
+        ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+        // si la modification est annulée on arrête la fonction
+    } else {
+        return;
     }
 }
+
+
+// fonction qui permet le retour en mode ajout d'entreprise
+function ent_reinitialize() {
+    // nettoyage de la zone d'indication d'édition
+    ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+    // nettoyage du tableau HTML
+    ent_clearHTMLBoard();
+    // vidage des champs de recherche
+    ent_searchRaz();
+    // reconstruction du tableau HTML
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+}
+
+
+// fonction de recherche dans le tableau HTML
+function ent_search() {
+    // variables
+    var i, ent_listRepresFound, ent_listActivityFound;
+    // tableaux de filtrage
+    var ent_arrayTemp = new Array();
+    var ent_arrayFinal = new Array();
+    var ent_arrayNameFound = new Array();
+    var ent_arrayRepresFound = new Array();
+    var ent_arrayActivityFound = new Array();
+
+    // on boucle sur le tableau d'affichage JS
+    for (i=0; i<ent_arrayJSToSplit.length; i++) {
+        // on stocke à chaque tour chaque élément de chaque ligne dans un tableau temporaire
+        ent_arrayTemp = ent_arrayJSToSplit[i].toLowerCase().split("§");
+        // si la recherche de nom d'entreprise est remplie et qu'elle a une correspondance avec un des éléments "Raison Sociale" du tableau temporaire OU si la recherche raison sociale est vide
+        if (((ent_t_searchName.value != "") && (ent_arrayTemp[0].indexOf(ent_t_searchName.value.toLowerCase()) != -1)) || (ent_t_searchName.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances de noms
+            ent_arrayNameFound.push(i);
+        }
+        // si la recherche de représentants d'entreprise est remplie et qu'elle a une correspondance avec un des éléments "Nom du représentant" du tableau temporaire OU si la recherche de représentant est vide
+        if (((ent_t_searchRepre.value != "") && (ent_arrayTemp[5].indexOf(ent_t_searchRepre.value.toLowerCase()) != -1)) || (ent_t_searchRepre.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances de noms de représentants
+            ent_arrayRepresFound.push(i);
+        }
+        // si la recherche d'activité est remplie et qu'elle a une correspondance avec un des éléments "Activités" du tableau temporaire OU si la recherche d'activités est vide
+        if (((ent_t_searchActivity.value != "") && (ent_arrayTemp[6].indexOf(ent_t_searchActivity.value.toLowerCase()) != -1)) || (ent_t_searchActivity.value == "")) {
+            // on stocke l'indice des éléments correspondants dans le tableau des correspondances des activités
+            ent_arrayActivityFound.push(i);
+        }
+    }
+
+    // on ajoute des "|" avant et après les indices pour ne pas avoir de soucis de correspondance entre chiffres et nombres
+    ent_listRepresFound = "|" + ent_arrayRepresFound.join("|") + "|";
+    ent_listActivityFound = "|" + ent_arrayActivityFound.join("|") + "|";
+
+    // on boucle sur le tableau contenant les indices de correspondance de noms
+    for (i=0; i<ent_arrayNameFound.length; i++) {
+        // si il y a correspondance des indices des noms de représentants et correspondance des indices des activités avec les indices des raisons sociales
+        if ((ent_listRepresFound.indexOf("|"+ent_arrayNameFound[i]+"|") != -1) && (ent_listActivityFound.indexOf("|"+ent_arrayNameFound[i]+"|") != -1)) {
+            // on ajoute les entrées au tableau final de filtrage
+            ent_arrayFinal.push(ent_arrayJSToSplit[ent_arrayNameFound[i]]);
+        }
+    }
+
+    // nettoyage du tableau HTML
+    ent_clearHTMLBoard();
+    // reconstruction du tableau en appliquant le filtre
+    ent_buildHTMLBoard(ent_arrayFinal);
+}
+
+
+// fonction qui permet de gaver le tableau pour les tests
+function tester(social, represName, activity) {
+    // création du nouveau tableau JS splité pour création du board HTML
+    var ent_arraySplitted = new Array();
+
+    ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+    // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
+    ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
+
+    // on vide le tableau HTML
+    ent_clearHTMLBoard();
+    // on le reconstruit à partir du tableau JS
+    ent_buildHTMLBoard(ent_arrayJSToSplit);
+    // on vide les champs de recherche
+    ent_searchRaz();
+}
+
+
+// valeurs pour tester à supprimer plus tard
+tester("javascript", "jean", "informatique");
+tester("css", "jean", "web");
+tester("html", "fabien", "web");
+tester("jquery", "seb", "informatique");
+tester("ajax", "seb", "web");
+tester("VueJS", "jack", "web");
