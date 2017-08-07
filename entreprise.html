@@ -5,15 +5,15 @@
         <table id="ent_board">
             <thead id="ent_thead">
                 <tr id="ent_titles">
-                    <th id="ent_social">Raison Sociale</th>
-                    <th id="ent_adress">Adresse</th>
-                    <th id="ent_mail">Mail</th>
-                    <th id="ent_phone">Tél.</th>
-                    <th id="ent_fax">Fax</th>
-                    <th id="ent_repr">Représentant</th>
-                    <th id="ent_activity">Activité</th>
-                    <th id="ent_activityDetail">Détails de l'activité</th>
-                    <th id="ent_pictures"></th>
+                    <th>Raison Sociale</th>
+                    <th>Adresse</th>
+                    <th>Mail</th>
+                    <th>Tél.</th>
+                    <th>Fax</th>
+                    <th>Représentant</th>
+                    <th>Activité</th>
+                    <th>Détails de l'activité</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="ent_tbody">
@@ -144,16 +144,16 @@
                             <p>
                                 <label for="ent_t_adressCity">Commune</label><br /><input type="text" name="ent_t_adressCity" id="ent_t_adressCity" size="10" />
                             </p>
+                            <p>
+                                <label for="ent_t_country">Pays</label><br /><input list="ent_country" type="text" name="ent_t_country" id="ent_t_country" size="10" />
+                                <datalist id="ent_country">
+                                    <option value="France">
+                                    <option value="Espagne">
+                                    <option value="Japon">
+                                </datalist>
+                            </p>
                         </div>
                     </div>
-                </div>
-                <div id="ent_activityDiv" class="ent_alignDiv">
-                    <p>
-                        <label for="ent_t_activity">Activité</label><br /><input type="text" name="ent_t_activity" id="ent_t_activity" size="15" />
-                    </p>
-                    <p>
-                        <label for="ent_t_activityDetail">Détail de l'activité</label><br /><input type="text" name="ent_t_activityDetail" id="ent_t_activityDetail" size="32" />
-                    </p>
                 </div>
             </fieldset>
             <div id="ent_repreDiv">
@@ -161,40 +161,61 @@
                     <legend>Représentant</legend>
                     <div class="ent_alignDiv">
                         <p>
-                            <label for="ent_t_represName">Nom</label><br /><input type="text" name="ent_t_represName" id="ent_t_represName" size="10" />
+                            <label for="ent_t_repres">Sélectionner un représentant</label><br />
+                            <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="15" />
+                            <datalist id="ent_repres">
+                                <option value="Pagan Jean-Jacques">
+                                <option value="Piron Léonce">
+                            </datalist>
                         </p>
                         <p>
-                            <label for="ent_t_represPrenom">Prénom</label><br /><input type="text" name="ent_t_represPrenom" id="ent_t_represPrenom" size="10" />
-                        </p>
-                    </div>
-                    <div class="ent_alignDiv">
-                        <p>
-                            <label for="ent_t_represMail">Mail</label><br /><input type="text" name="ent_t_represMail" id="ent_t_represMail" size="14" />
-                        </p>
-                        <p>
-                            <label for="ent_t_represTel">Téléphone</label><br /><input type="text" name="ent_t_represTel" id="ent_t_represTel" size="10" />
+                            OU
+                            <input type="button" id="ent_newRepres" class="btn_green ent_button" onclick="alert('Vers interface Nico')" value="créer un nouveau représentant" />
                         </p>
                     </div>
                 </fieldset>
             </div>
-            <div id="ent_ActivityDiv">
+            <div id="ent_activityDiv1" class="ent_activityDiv">
                 <fieldset>
-                    <legend>Tuteur</legend>
-                    <div class="ent_alignDiv">
+                    <legend>Activités et Tuteurs</legend>
+                    <div id="ent_activityDiv" class="ent_alignDiv">
                         <p>
-                            <label for="ent_t_tutorName">Nom</label><br /><input type="text" name="ent_t_tutorName" id="ent_t_tutorName" size="10" />
+                            <label for="ent_t_activity">Activité</label><br />
+                            <input list="ent_activity" type="text" id="ent_t_activity" name="ent_t_activity" size="15" />
+                            <datalist id="ent_activity">
+                                <option value="Informatique" data-id="7">
+                                <option value="Secrétariat" data-id="8">
+                                <option value="Tourisme" data-id="12">
+                            </datalist>
+                            <input type="button" id="ent_newActivity" class="btn_green ent_button" onclick="createActivity()" value="Ajouter cette nouvelle activité" />
                         </p>
                         <p>
-                            <label for="ent_t_tutorPrenom">Prénom</label><br /><input type="text" name="ent_t_tutorPrenom" id="ent_t_tutorPrenom" size="10" />
+                            <label for="ent_t_activityDetail">Détails de l'activité</label><br /><input type="text" name="ent_t_activityDetail" id="ent_t_activityDetail" size="32" />
                         </p>
                     </div>
                     <div class="ent_alignDiv">
                         <p>
-                            <label for="ent_t_tutorMail">Mail</label><br /><input type="text" name="ent_t_tutorMail" id="ent_t_tutorMail" size="14" />
+                            <label for="ent_t_tutor">Sélectionner un tuteur</label><br />
+                            <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="15" />
+                            <datalist id="ent_tutor">
+                                <option value="Pagan Jean-Jacques">
+                                <option value="Piron Léonce">
+                                <option value="Doe John">
+                            </datalist>
                         </p>
+                        <input type="button" id="ent_addTutor" class="btn_green ent_button" onclick="addTutor()" value="+">
+                        <div id="ent_selectedTutor">
+                            <!-- <p id="tuteur1"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur1)">x</span> Michael Jordan</p>
+                            <p id="tuteur2"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur2)">x</span> John Lennon</p> -->
+                        </div>
                         <p>
-                            <label for="ent_t_tutorTel">Téléphone</label><br /><input type="text" name="ent_t_tutorTel" id="ent_t_tutorTel" size="10" />
+                            OU
+                            <input type="button" id="ent_newTutor" class="btn_green ent_button" onclick="alert('Vers interface Nico')" value="créer un nouveau tuteur" />
                         </p>
+                    </div>
+                    <div>
+                        <p>Activité principale de l'entreprise <input type="checkbox" id="ent_principalActivity" /></p>
+                        <input type="button" id="ent_addActivity" class="btn_green ent_button" onclick="addActivity()" value="Ajouter une activité supplémentaire" />
                     </div>
                 </fieldset>
             </div>

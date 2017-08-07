@@ -149,19 +149,18 @@ th, td {
 }
 
 /*Le bloc nom, activité et adresse*/
-#ent_coordonneesDiv, #ent_repreDiv, #ent_ActivItyDiv {
+#ent_coordonneesDiv, #ent_repreDiv, .ent_activityDiv {
     display: flex;
     flex-wrap: wrap;
     font-size: 0.8em;
 }
 
-#ent_repreDiv legend, #ent_ActivItyDiv legend {
+#ent_repreDiv legend, .ent_activityDiv legend {
     font-size: 1.2em;
 }
 
-#ent_activityDiv {
+.ent_activityDiv {
     font-size: 0.8em;
-    margin-top: -20px;
 }
 
 .ent_alignDiv {

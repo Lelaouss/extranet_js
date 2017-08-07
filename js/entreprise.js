@@ -42,6 +42,11 @@ var ent_tbody = document.getElementById("ent_tbody");
 // Récupération de la div d'affichage d'indications pour l'utilisateur
 var ent_indications = document.getElementById("ent_indications");
 
+// compteur du nombre de tuteurs sélectionnés
+var ent_nbTutor = 0;
+// compteur du nombre d'activités ajoutées
+var ent_nbActivity = 1;
+
 
 
 
@@ -422,7 +427,85 @@ function ent_search() {
     ent_buildHTMLBoard(ent_arrayFinal);
 }
 
+// fonction qui permet d'ajouter plusieurs tuteurs sur une activité
+function addTutor() {
+    // recupération de la valeur du datalist tuteur
+    var ent_dataTutor = document.querySelector("#ent_t_tutor").value;
+    // récupération de la div d'affichage de la sélection de tuteur
+    var ent_selectedTutor = document.querySelector("#ent_selectedTutor");
+    // si on a bien sélectionné un tuteur et qu'il est différent d'un déjà sélectionné
+    if (ent_dataTutor != "") {
+        // incrémentation du nombre de tuteurs
+        ent_nbTutor++;
+        // ajout du tuteur sélectionné dans la div
+        ent_selectedTutor.innerHTML += "<p class='ent_addedTutor' id='tuteur" + ent_nbTutor + "'><span class='ent_toRemoveTutor' onclick='removeTutor(tuteur" + ent_nbTutor + ")'>x</span> " + ent_dataTutor + "</p>";
+        
+        // remise à zéro du champ de datalist tuteurs
+        document.querySelector("#ent_t_tutor").value = "";
+    }
+}
 
+// fonction qui permet de retirer un tuteur de la sélection
+function removeTutor(tutor) {
+    // récupération de la div d'affichage de la sélection de tuteur
+    var ent_selectedTutor = document.querySelector("#ent_selectedTutor");
+    // suppression de l'élement cliqué
+    ent_selectedTutor.removeChild(tutor);
+    // décrémentation du compteur de tuteurs ajoutés
+    ent_nbTutor--;
+}
+
+// fonction qui permet de créer une activité si elle n'est pas référencée dans la datalist
+function createActivity() {
+    // variables
+    var ent_bFind = false;
+    var i;
+    // récupération de la datalist
+    var ent_activityDatalist = document.querySelector("#ent_activity");
+    // récupération de la valeur entrée dans le champ activité
+    var ent_newActivityName = document.querySelector("#ent_t_activity").value;
+    // recupération de toutes les options de la datalist
+    var ent_dataOptions = ent_activityDatalist.querySelectorAll("option");
+
+    // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la bdd
+    for (i=0; i<ent_dataOptions.length; i++) {
+        if (ent_dataOptions[i].value.toLowerCase() == ent_newActivityName.toLowerCase()) {
+            ent_bFind = true;
+            alert("Cette activité existe déja");
+        }
+    }
+
+    // si le champ est renseigné et qu'il est différent d'une option possible
+    if ((ent_newActivityName != "") && (!ent_bFind)) {
+        // ajout d'une activité supplémentaire
+        ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + ">";
+        // remise à zéro du champ activié
+        document.querySelector("#ent_t_activity").value = "";
+    }        
+}
+
+// fonction qui permet de dupliquer le block activiés afin d'en ajouter plusieurs
+function addActivity() {
+    // variables
+    var i;
+    // récupération du bloc activité
+    var ent_activityDiv = document.querySelector("#ent_ActivityDiv"+ent_nbActivity).cloneNode(true);
+    // incrémentation du nombre d'activités ajoutées
+    ent_nbActivity++;
+    // mis à jour des attributs de la nouvelle div
+    ent_activityDiv.id = "ent_ActivityDiv" + ent_nbActivity;
+    // récupération du bloc de coordonnées
+    var ent_coordonneesTotal = document.querySelector("#ent_coordonneesTotal");
+    // ajout du bloc à la suite de la page
+    ent_coordonneesTotal.appendChild(ent_activityDiv);
+    // remise à zéro de tous les champs
+    var ent_allInput = ent_activityDiv.querySelectorAll("input[type='text']");
+    for (i=0; i<ent_allInput.length; i++) {
+        ent_allInput[i].value = "";
+    }
+}
+
+/*
 // fonction qui permet de gaver le tableau pour les tests
 function tester(social, represName, activity) {
     // création du nouveau tableau JS splité pour création du board HTML
@@ -448,3 +531,11 @@ tester("html", "fabien", "web");
 tester("jquery", "seb", "informatique");
 tester("ajax", "seb", "web");
 tester("VueJS", "jack", "web");
+
+
+console.log( data= $('#ent_activity option').filter(function() {
+        return this.value == $('#ent_t_activity').val();
+    }).data("id") );
+
+*/
+
