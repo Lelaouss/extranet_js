@@ -1,5 +1,10 @@
-/*Le tableau*/
+/*Les fieldset de la page*/
+#ent_entreprises fieldset legend {
+    font-style: italic;
+    font-size: 1em;
+}
 
+/*Le tableau*/
 #ent_companies {
     display: flex;
     justify-content: center;
@@ -13,17 +18,13 @@
     width: 100%;
 }
 
-/*le fieldset du tableau*/
+/*les fieldset du tableau*/
 #ent_companies fieldset {
     width: 100%;
 }
 
-fieldset legend {
-    font-style: italic;
-}
-
 /*Les lignes*/
-tr {
+#ent_board tr {
     border: 1px solid #87BB34;
     background-color: #BDC3C7;
 }
@@ -45,7 +46,7 @@ tr {
 }
 
 /*Les cellules*/
-th, td {
+#ent_board th, #ent_board td {
     height: 29px;
 }
 
@@ -74,8 +75,6 @@ th, td {
     text-decoration: underline;
 }
 
-
-
 /*La recherche*/
 #ent_search {
     margin-top: 20px;
@@ -99,7 +98,6 @@ th, td {
 }
 
 /*La div d'affichage d'indications*/
-
 #ent_message {
     display: flex;
     flex-direction: column;
@@ -122,22 +120,12 @@ th, td {
     margin: 0;
 }
 
-
 /*Le formulaire*/
-
-/*Les trois fieldset*/
 #ent_form {
     margin-top: 20px;
-	padding-right: 18px;
+    padding-right: 18px;
 }
 
-#ent_coordonneesTotal {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-/*Les champs*/
 #ent_coordonneesTotal input {
     border: 1px solid #87BB34;
 }
@@ -148,47 +136,44 @@ th, td {
     outline-color: #87BB34;
 }
 
-/*Le bloc nom, activité et adresse*/
-#ent_coordonneesDiv, #ent_repreDiv, .ent_activityDiv {
+/*Les blocs coordonnées, représentant, activités et activités ajoutées*/
+#ent_coordonneesTotal {
+    border: 1px solid blue;
     display: flex;
     flex-wrap: wrap;
-    font-size: 0.8em;
 }
 
-#ent_repreDiv legend, .ent_activityDiv legend {
-    font-size: 1.2em;
-}
-
-.ent_activityDiv {
-    font-size: 0.8em;
-}
-
-.ent_alignDiv {
+#ent_coordRepresDiv {
     display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
 }
 
-#ent_nomMailDiv p {
+#ent_coordonneesDiv, #ent_represDiv {
+    flex-grow: 1;
+}
+
+#ent_tutorActivityDiv {
+    border: 1px solid red;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+
+
+/*Le bloc coordonnées*/
+#ent_nomMailDiv p, #ent_adressDiv1 p, #ent_adressDiv2 p {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-#ent_adressDiv p {
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-.ent_columnDiv p {
-    margin-top: 10px;
-    margin-bottom: 10px;
+#ent_cityCountry p {
+    margin-top: 0;
 }
 
 /*Les boutons*/
-#ent_buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
 .ent_button {
     padding: 10px 20px;
     text-decoration: none;
@@ -199,10 +184,37 @@ th, td {
     cursor: pointer;
 }
 
+#ent_buttonsDiv {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
 #ent_reset {
     margin-left: 5px;
 }
 
+/*Les classes de display des différents boutons*/
 .ent_hide {
     display: none;
 }
+
+.ent_show {
+    display: inline-block;
+}
+
+
+.ent_alignDiv {
+    /*border: 1px solid green;*/
+    display: flex;
+}
+
+.ent_columnDiv {
+    border: 1px solid yellow;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+

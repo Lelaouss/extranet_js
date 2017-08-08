@@ -1,232 +1,240 @@
 <link rel="stylesheet" href="css/entreprise.css" />
-<div id="ent_companies">
-    <fieldset>
-        <legend>Entreprises</legend>
-        <table id="ent_board">
-            <thead id="ent_thead">
-                <tr id="ent_titles">
-                    <th>Raison Sociale</th>
-                    <th>Adresse</th>
-                    <th>Mail</th>
-                    <th>Tél.</th>
-                    <th>Fax</th>
-                    <th>Représentant</th>
-                    <th>Activité</th>
-                    <th>Détails de l'activité</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="ent_tbody">
-                <tr id=ent_replaceLine0>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td id="ent_picto"></td>
-                </tr>
-                <tr id=ent_replaceLine1>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr id=ent_replaceLine2>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr id=ent_replaceLine3>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr id=ent_replaceLine4>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr id=ent_replaceLine5>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <div id="ent_search">
-            <div id="ent_searchInputs">
-                <input type="text" name="ent_t_searchName" id="ent_t_searchName" placeholder="Raison Sociale" onkeyup="ent_search()" />
-                <input type="text" name="ent_t_searchRepre" id="ent_t_searchRepre" placeholder="Représentant" onkeyup="ent_search()" />
-                <input type="text" name="ent_t_searchActivity" id="ent_t_searchActivity" placeholder="Activité" onkeyup="ent_search()" />
+<div id="ent_entreprises">
+    <div id="ent_companies">
+        <fieldset>
+            <legend>Entreprises</legend>
+            <table id="ent_board">
+                <thead id="ent_thead">
+                    <tr id="ent_titles">
+                        <th>Raison Sociale</th>
+                        <th>Adresse</th>
+                        <th>Mail</th>
+                        <th>Tél.</th>
+                        <th>Fax</th>
+                        <th>Représentant</th>
+                        <th>Activité</th>
+                        <th>Détails de l'activité</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="ent_tbody">
+                    <tr id=ent_replaceLine0>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td id="ent_picto"></td>
+                    </tr>
+                    <tr id=ent_replaceLine1>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id=ent_replaceLine2>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id=ent_replaceLine3>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id=ent_replaceLine4>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id=ent_replaceLine5>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="ent_search">
+                <div id="ent_searchInputs">
+                    <input type="text" name="ent_t_searchName" id="ent_t_searchName" placeholder="Raison Sociale" onkeyup="ent_search()" />
+                    <input type="text" name="ent_t_searchRepre" id="ent_t_searchRepre" placeholder="Représentant" onkeyup="ent_search()" />
+                    <input type="text" name="ent_t_searchActivity" id="ent_t_searchActivity" placeholder="Activité" onkeyup="ent_search()" />
+                </div>
+                <div id="ent_searchButton">
+                    <input type="button" id="ent_searchReset" class="btn_green ent_button" onclick="ent_searchRaz(), ent_search()" value="Réinitialiser">
+                </div>
             </div>
-            <div id="ent_searchButton">
-                <input type="button" id="ent_searchReset" class="btn_green ent_button" onclick="ent_searchRaz(), ent_search()" value="Réinitialiser">
-            </div>
-        </div>
-    </fieldset>
-</div>
-<div id="ent_message">
-    <p id="ent_indications">Aucune entreprise en cours d'édition.</p>
-    <p id="ent_retour">Cliquez sur <input type="button" id="ent_reinit" class="btn_green ent_button" onclick="ent_reinitialize()" value="Nouvelle fiche Entreprise" /> si vous souhaitez en saisir une nouvelle.</p>
-</div>
-<div id="ent_form">
-    <form>
-        <div id="ent_coordonneesTotal">
-            <div id="ent_coordonneesDiv">
-                <fieldset>
-                    <legend>Coordonnées</legend>
-                        <div id="ent_nomMailDiv">
-                            <div class="ent_alignDiv">
-                                <p>
-                                    <label for="ent_t_social">Raison Sociale</label><br /><input type="text" name="ent_t_social" id="ent_t_social" size="10" />
-                                </p>
-                                <p>
-                                    <label for="ent_t_mail">Mail</label><br /><input type="email" name="ent_t_mail" id="ent_t_mail" size="14" />
-                                </p>
+        </fieldset>
+    </div>
+    <div id="ent_message">
+        <p id="ent_indications">Aucune entreprise en cours d'édition.</p>
+        <p id="ent_retour">Cliquez sur <input type="button" id="ent_reinit" class="btn_green ent_button" onclick="ent_reinitialize()" value="Nouvelle fiche Entreprise" /> si vous souhaitez en saisir une nouvelle.</p>
+    </div>
+    <div id="ent_form">
+        <form>
+            <div id="ent_coordonneesTotal">
+                <div id="ent_coordRepresDiv">
+                    <div id="ent_coordonneesDiv">
+                        <fieldset>
+                            <legend>Coordonnées</legend>
+                            <div class="ent_alignDiv" >
+                                <div class="ent_alignDiv" id="ent_nomMailDiv">
+                                    <div>
+                                        <p>
+                                            <label for="ent_t_social">Raison Sociale</label><br /><input type="text" name="ent_t_social" id="ent_t_social" size="10" />
+                                        </p>
+                                        <p>
+                                            <label for="ent_t_mail">Mail</label><br /><input type="email" name="ent_t_mail" id="ent_t_mail" size="14" />
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p>
+                                            <label for="ent_t_phone">Téléphone</label><br /><input type="tel" name="ent_t_phone" id="ent_t_phone" size="8" />
+                                        </p>
+                                        <p>
+                                            <label for="ent_t_fax">Fax</label><br /><input type="tel" name="ent_t_fax" id="ent_t_fax" size="8" />
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="ent_adressDiv1">
+                                    <p>
+                                        <label for="ent_t_adress">Adresse</label><br /><input type="text" name="ent_t_adress" id="ent_t_adress" size="30" />
+                                    </p>
+                                    <p>
+                                        <label for="ent_t_adressCompl2">Complément d'adresse 2</label><br /><input type="text" name="ent_t_adressCompl2" id="ent_t_adressCompl2" size="30" />
+                                    </p>
+                                </div>
+                                <div id="ent_adressDiv2">
+                                    <p>
+                                        <label for="ent_t_adressCompl1">Complément d'adresse 1</label><br /><input type="text" name="ent_t_adressCompl1" id="ent_t_adressCompl1" size="30" />
+                                    </p>
+                                    <div class="ent_alignDiv" id="ent_cityCountry">
+                                        <p>
+                                            <label for="ent_t_adressCP">Code Postal</label><br /><input type="text" name="ent_t_adressCP" id="ent_t_adressCP" size="4" />
+                                        </p>
+                                        <p>
+                                            <label for="ent_t_adressCity">Commune</label><br /><input type="text" name="ent_t_adressCity" id="ent_t_adressCity" size="10" />
+                                        </p>
+                                        <p>
+                                            <label for="ent_t_country">Pays</label><br /><input list="ent_country" type="text" name="ent_t_country" id="ent_t_country" size="10" />
+                                            <datalist id="ent_country">
+                                                <option value="France">
+                                                <option value="Espagne">
+                                                <option value="Japon">
+                                            </datalist>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ent_alignDiv">
+                        </fieldset>
+                    </div>
+                    <div id="ent_represDiv">
+                        <fieldset>
+                            <legend>Représentant</legend>
+                            <div class="ent_columnDiv">
                                 <p>
-                                    <label for="ent_t_phone">Téléphone</label><br /><input type="tel" name="ent_t_phone" id="ent_t_phone" size="8" />
-                                </p>
-                                <p>
-                                    <label for="ent_t_fax">Fax</label><br /><input type="tel" name="ent_t_fax" id="ent_t_fax" size="8" />
-                                </p>
-                            </div>
-                        </div>
-                        <div id="ent_adressDiv">
-                            <p>
-                                <label for="ent_t_adress">Adresse</label><br /><input type="text" name="ent_t_adress" id="ent_t_adress" size="30" />
-                            </p>
-                            <p>
-                                <label for="ent_t_adressCompl2">Complément d'adresse 2</label><br /><input type="text" name="ent_t_adressCompl2" id="ent_t_adressCompl2" size="30" />
-                            </p>
-                        </div>
-                        <div class="ent_adressDiv">
-                            <p>
-                                <label for="ent_t_adressCompl1">Complément d'adresse 1</label><br /><input type="text" name="ent_t_adressCompl1" id="ent_t_adressCompl1" size="30" />
-                            </p>
-                            <div class="ent_alignDiv">
-                                <p>
-                                    <label for="ent_t_adressCP">Code Postal</label><br /><input type="text" name="ent_t_adressCP" id="ent_t_adressCP" size="4" />
-                                </p>
-                                <p>
-                                    <label for="ent_t_adressCity">Commune</label><br /><input type="text" name="ent_t_adressCity" id="ent_t_adressCity" size="10" />
-                                </p>
-                                <p>
-                                    <label for="ent_t_country">Pays</label><br /><input list="ent_country" type="text" name="ent_t_country" id="ent_t_country" size="10" />
-                                    <datalist id="ent_country">
-                                        <option value="France">
-                                        <option value="Espagne">
-                                        <option value="Japon">
+                                    <label for="ent_t_repres">Sélectionner un représentant</label><br />
+                                    <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="25" oninput="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" onkeyup="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" />
+                                    <datalist id="ent_repres">
+                                        <option value="Pagan Jean-Jacques" data-id="1" />
+                                        <option value="Piron Léonce" data-id="2" />
                                     </datalist>
                                 </p>
+                                <p>
+                                    <input type="button" id="ent_newRepres" class="btn_green ent_button ent_hide" onclick="alert('Vers interface Nico')" value="créer un nouveau représentant" />
+                                </p>
                             </div>
-                        </div>
-                </fieldset>
-            </div>
-            <div id="ent_repreDiv">
-                <fieldset>
-                    <legend>Représentant</legend>
-                    <div class="ent_columnDiv">
-                        <p>
-                            <label for="ent_t_repres">Sélectionner un représentant</label><br />
-                            <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="25" oninput="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" onkeyup="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" />
-                            <datalist id="ent_repres">
-                                <option value="Pagan Jean-Jacques" data-id="1" />
-                                <option value="Piron Léonce" data-id="2" />
-                            </datalist>
-                        </p>
-                        <p>
-                            <input type="button" id="ent_newRepres" class="btn_green ent_button ent_hide" onclick="alert('Vers interface Nico')" value="créer un nouveau représentant" />
-                        </p>
+                        </fieldset>
                     </div>
-                </fieldset>
-            </div>
-            <div id="ent_tutorActivityDiv" class="ent_alignDiv" >
-                <fieldset>
-                    <legend>Activités</legend>
+                </div>
+                <div id="ent_tutorActivityDiv" class="ent_alignDiv">
                     <div id="ent_activityDiv" class="ent_activityDiv ent_columnDiv">
-                        <p>
-                            <label for="ent_t_activity">Activité</label><br />
-                            <input list="ent_activity" type="text" id="ent_t_activity" name="ent_t_activity" size="20" oninput="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" onkeyup="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" />
-                            <datalist id="ent_activity">
-                                <option value="Informatique" data-id="1" />
-                                <option value="Secrétariat" data-id="2"/ >
-                                <option value="Tourisme" data-id="3" />
-                            </datalist>
-                            <input type="button" id="ent_addActivity" class="btn_green ent_button ent_hide" onclick="" value="+">
-                        </p>
-                        <p>
-                            <label for="ent_t_activityDetail">Détails de l'activité</label><br /><input type="text" name="ent_t_activityDetail" id="ent_t_activityDetail" size="32" />
-                        </p>
-                        <input type="button" id="ent_newActivity" class="btn_green ent_button ent_hide" onclick="createActivity()" value="Ajouter activité à la liste" />
+                        <fieldset>
+                            <legend>Activités</legend>
+                                <p>
+                                    <label for="ent_t_activity">Sélectionner une activité</label><br />
+                                    <input list="ent_activity" type="text" id="ent_t_activity" name="ent_t_activity" size="20" oninput="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" onkeyup="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" />
+                                    <datalist id="ent_activity">
+                                        <option value="Informatique" data-id="1" />
+                                        <option value="Secrétariat" data-id="2"/ >
+                                        <option value="Tourisme" data-id="3" />
+                                    </datalist>
+                                    <input type="button" id="ent_addActivity" class="btn_green ent_button ent_hide" onclick="" value="+">
+                                </p>
+                                <p>
+                                    <label for="ent_t_activityDetail">Détails de l'activité</label><br /><input type="text" name="ent_t_activityDetail" id="ent_t_activityDetail" size="32" />
+                                </p>
+                                <input type="button" id="ent_newActivity" class="btn_green ent_button ent_hide" onclick="createActivity()" value="Ajouter activité à la liste" />
+                        </fieldset>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Activités ajoutées</legend>
-                    <div class="ent_alignDiv">
-                        <p>
-                            <label for="ent_t_tutor">Sélectionner un tuteur</label><br />
-                            <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="15" />
-                            <datalist id="ent_tutor">
-                                <option value="Pagan Jean-Jacques" data-id="1" />
-                                <option value="Piron Léonce" data-id="2" />
-                                <option value="Doe John" data-id="3" />
-                            </datalist>
-                        </p>
-                        <input type="button" id="ent_addTutor" class="btn_green ent_button" onclick="addTutor()" value="+">
-                        <div id="ent_selectedTutor">
-                            <!-- <p id="tuteur1"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur1)">x</span> Michael Jordan</p>
-                            <p id="tuteur2"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur2)">x</span> John Lennon</p> -->
-                        </div>
-                        <p>
-                            OU
-                            <input type="button" id="ent_newTutor" class="btn_green ent_button" onclick="alert('Vers interface Nico')" value="créer un nouveau tuteur" />
-                        </p>
+                    <div id="ent_addedActivity">
+                        <fieldset>
+                            <legend>Activités ajoutées</legend>
+                            <div class="ent_alignDiv">
+                                <p>
+                                    <label for="ent_t_tutor">Sélectionner un tuteur</label><br />
+                                    <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="15" />
+                                    <datalist id="ent_tutor">
+                                        <option value="Pagan Jean-Jacques" data-id="1" />
+                                        <option value="Piron Léonce" data-id="2" />
+                                        <option value="Doe John" data-id="3" />
+                                    </datalist>
+                                </p>
+                                <input type="button" id="ent_addTutor" class="btn_green ent_button" onclick="addTutor()" value="+">
+                                <div id="ent_selectedTutor">
+                                    <!-- <p id="tuteur1"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur1)">x</span> Michael Jordan</p>
+                                    <p id="tuteur2"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur2)">x</span> John Lennon</p> -->
+                                </div>
+                                <p>
+                                    OU
+                                    <input type="button" id="ent_newTutor" class="btn_green ent_button" onclick="alert('Vers interface Nico')" value="créer un nouveau tuteur" />
+                                </p>
+                            </div>
+                            <div>
+                                <p>Activité principale de l'entreprise <input type="checkbox" id="ent_principalActivity" /></p>
+                            </div>
+                        </fieldset>
                     </div>
-                    <div>
-                        <p>Activité principale de l'entreprise <input type="checkbox" id="ent_principalActivity" /></p>
-                    </div>
-                </fieldset>
+                </div>
             </div>
-        </div>
-        <div id="ent_buttons">
-            <input type="button" id="ent_ajouter" class="btn_green ent_button" onclick="ent_addLine()" value="Ajouter" />
-            <input type="button" id="ent_modifier" class="btn_red ent_hide ent_button" onclick="ent_modifyLine()" value="Modifier" />
-            <input type="button" id="ent_reset" class="btn_green ent_button" onclick="ent_raz()" value="Réinitialiser" />
-        </div>
-    </form>
+            <div id="ent_buttonsDiv">
+                <input type="button" id="ent_ajouter" class="btn_green ent_button" onclick="ent_addLine()" value="Ajouter" />
+                <input type="button" id="ent_modifier" class="btn_red ent_hide ent_button" onclick="ent_modifyLine()" value="Modifier" />
+                <input type="button" id="ent_reset" class="btn_green ent_button" onclick="ent_raz()" value="Réinitialiser" />
+            </div>
+        </form>
+    </div>
 </div>
 <script type="text/javascript" src="js/entreprise.js"></script>
