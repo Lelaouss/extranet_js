@@ -466,44 +466,90 @@ function createActivity() {
     var ent_newActivityName = document.querySelector("#ent_t_activity").value;
     // recupération de toutes les options de la datalist
     var ent_dataOptions = ent_activityDatalist.querySelectorAll("option");
+    // récupération du bouton permettant l'ajout dans la datalist
+    var ent_buttonAddActivity = document.querySelector("#ent_newActivity");
 
     // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la bdd
     for (i=0; i<ent_dataOptions.length; i++) {
         if (ent_dataOptions[i].value.toLowerCase() == ent_newActivityName.toLowerCase()) {
             ent_bFind = true;
-            alert("Cette activité existe déja");
         }
     }
 
     // si le champ est renseigné et qu'il est différent d'une option possible
     if ((ent_newActivityName != "") && (!ent_bFind)) {
         // ajout d'une activité supplémentaire
-        ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + ">";
+        var ent_newDataId = ent_dataOptions.length + 1;
+        ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + " data-id=" + ent_newDataId + ">";
         // remise à zéro du champ activié
         document.querySelector("#ent_t_activity").value = "";
-    }        
+        // on cache le bouton une fois l'ajout fait
+        ent_buttonAddActivity.setAttribute("class", "ent_hide");
+    }
+
 }
 
-// fonction qui permet de dupliquer le block activiés afin d'en ajouter plusieurs
-function addActivity() {
+// fonction qui permet l'affichage du bouton créer en fonction de la recherche tapée dans le datalist
+function ent_displayButton(inputId, buttonAddId, dataId, buttonPlusId) {
     // variables
     var i;
-    // récupération du bloc activité
-    var ent_activityDiv = document.querySelector("#ent_ActivityDiv"+ent_nbActivity).cloneNode(true);
-    // incrémentation du nombre d'activités ajoutées
-    ent_nbActivity++;
-    // mis à jour des attributs de la nouvelle div
-    ent_activityDiv.id = "ent_ActivityDiv" + ent_nbActivity;
-    // récupération du bloc de coordonnées
-    var ent_coordonneesTotal = document.querySelector("#ent_coordonneesTotal");
-    // ajout du bloc à la suite de la page
-    ent_coordonneesTotal.appendChild(ent_activityDiv);
-    // remise à zéro de tous les champs
-    var ent_allInput = ent_activityDiv.querySelectorAll("input[type='text']");
-    for (i=0; i<ent_allInput.length; i++) {
-        ent_allInput[i].value = "";
+    var iMyID = 0;
+    var iNBContientTrue = 0;
+    var inputId = "#"+inputId.id;
+    var buttonAddId = "#"+buttonAddId.id;
+    var dataId = "#"+dataId.id;
+    var buttonPlusId = "#"+buttonPlusId.id;
+    
+    // récupération de la valeur du champ datalist
+    var ent_inputValue = document.querySelector(inputId).value;
+    // récupération du bouton permettant l'ajout que l'on souhaite faire apparaitre
+    var ent_buttonAdd = document.querySelector(buttonAddId);
+    // récupération des data-id des balises option
+    var ent_dataList = document.querySelector(dataId);
+    var ent_allOption = ent_dataList.querySelectorAll("option");
+    // récupération du bouton plus
+    var ent_buttonPlus = document.querySelector(buttonPlusId);
+
+    // si mon champ de recherche n'est pas vide
+    if (ent_inputValue != "") {
+        // on boucle sur toutes les options existantes du datalist et on affiche le bouton en fonction du résultat
+        for (i=0; i<ent_allOption.length; i++) {
+            // si le nom entré dans le champ input est présent dans le datalist
+            if (ent_allOption[i].value.toLowerCase().indexOf(ent_inputValue.toLowerCase()) != -1) {
+                // on incrémente un compteur de résultat
+                iNBContientTrue++;
+            }
+            // si le nom entré dans le champ input est égal à un résultat du datalist
+            if (ent_allOption[i].value == ent_inputValue) {
+                // on récupère le data-id de l'option
+                iMyID = ent_allOption[i].attributes[1].value;
+            }
+        }
+
+        // si le nom entré dans le champ input n'est au final pas présent dans le datalist
+        if ((iNBContientTrue == 0) || (iMyID == 0)) {
+            // on affiche le bouton permettant la création d'un nouvel élément
+            ent_buttonAdd.setAttribute("class", "ent_show");
+            // on cache le bouton "+" permettant l'ajout de l'élément à la liste
+            ent_buttonPlus.setAttribute("class", "ent_hide");
+        } else {
+            // sinon on le laisse caché
+            ent_buttonAdd.setAttribute("class", "ent_hide");
+            // si le nom entré dans le champ input correspond bien à une des options du datalist
+            if (iMyID != 0) {
+                // on affiche le bouton "+" permettant l'ajout de l'élément à la liste
+                ent_buttonPlus.setAttribute("class", "ent_show");
+            }
+        }
+    } else {
+        // sinon si il est vide on cache les boutons
+        ent_buttonAdd.setAttribute("class", "ent_hide");
+        ent_buttonPlus.setAttribute("class", "ent_hide");
     }
+
 }
+
+
 
 /*
 // fonction qui permet de gaver le tableau pour les tests
@@ -536,6 +582,10 @@ tester("VueJS", "jack", "web");
 console.log( data= $('#ent_activity option').filter(function() {
         return this.value == $('#ent_t_activity').val();
     }).data("id") );
+
+    querySelector(#ent_repres)
+    var tata = querySelectorAll(option)
+    tata[0].attributes[1].value == champ.value
 
 */
 
