@@ -4,12 +4,14 @@
     font-size: 1em;
 }
 
+
 /*Le tableau*/
 #ent_companies {
     display: flex;
     justify-content: center;
 	padding-right: 18px;
 }
+
 
 /*la mise en page globale du tableau*/
 #ent_board {
@@ -18,10 +20,12 @@
     width: 100%;
 }
 
+
 /*les fieldset du tableau*/
 #ent_companies fieldset {
     width: 100%;
 }
+
 
 /*Les lignes*/
 #ent_board tr {
@@ -45,10 +49,12 @@
     visibility: visible;
 }
 
+
 /*Les cellules*/
 #ent_board th, #ent_board td {
     height: 29px;
 }
+
 
 /*La cellule contenant les pictos de suppression et modification*/
 #ent_pictures {
@@ -75,6 +81,7 @@
     text-decoration: underline;
 }
 
+
 /*La recherche*/
 #ent_search {
     margin-top: 20px;
@@ -96,6 +103,7 @@
     outline-color: #87BB34;
     outline-width: 1px;
 }
+
 
 /*La div d'affichage d'indications*/
 #ent_message {
@@ -120,6 +128,7 @@
     margin: 0;
 }
 
+
 /*Le formulaire*/
 #ent_form {
     margin-top: 20px;
@@ -135,6 +144,7 @@
     outline-style: solid;
     outline-color: #87BB34;
 }
+
 
 /*Les blocs coordonnées, représentant, activités et activités ajoutées*/
 #ent_coordonneesTotal {
@@ -161,6 +171,69 @@
     flex-grow: 1;
 }
 
+#ent_activityDiv, #ent_addedActivity {
+    flex-grow: 1;
+}
+
+#ent_toAddTutors {
+    padding-right: 10px;
+    text-align: right;
+}
+
+#ent_toAddTutors label {
+    padding-right: 25px;
+}
+
+#ent_listOfActivities {
+    border-right: 1px solid #87BB34;
+    padding-right: 5px;
+}
+
+#ent_listOfTutors {
+    flex-grow: 1;
+    border-left: 1px solid #87BB34;
+    padding-left: 5px;
+    text-align: center;
+    align-items: center;
+}
+
+.ent_subTitle {
+    text-decoration: underline;
+}
+
+#ent_listOfAddedTutors {
+    width: 50%;
+}
+
+
+
+/*Les classes d'alignement*/
+.ent_alignDiv {
+    display: flex;
+}
+
+.ent_columnDiv {
+    border: 1px solid yellow;
+    display: flex;
+    flex-direction: column;
+}
+
+/*Les ajouts dynamiques*/
+.ent_addedThing {
+    border: 1px solid black;
+    margin: 0;
+    margin-bottom: 2px;
+    background-color: #BDC3C7;
+}
+
+.ent_addedThing:hover {
+    cursor: default;
+    background-color: #87BB34;
+}
+
+.ent_toRemoveTutor:hover {
+    cursor: pointer;
+}
 
 
 /*Le bloc coordonnées*/
@@ -173,11 +246,12 @@
     margin-top: 0;
 }
 
+
 /*Les boutons*/
 .ent_button {
     padding: 10px 20px;
     text-decoration: none;
-    font-family: Verdana, Arial;
+    font-family: Verdana, Arial, serif;
     font-weight: bold;
     font-size: 11px;
     border-radius: 10px 10px 10px 10px;
@@ -194,6 +268,7 @@
     margin-left: 5px;
 }
 
+
 /*Les classes de display des différents boutons*/
 .ent_hide {
     display: none;
@@ -202,19 +277,4 @@
 .ent_show {
     display: inline-block;
 }
-
-
-.ent_alignDiv {
-    /*border: 1px solid green;*/
-    display: flex;
-}
-
-.ent_columnDiv {
-    border: 1px solid yellow;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
 

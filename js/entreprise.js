@@ -432,7 +432,7 @@ function addTutor() {
     // recupération de la valeur du datalist tuteur
     var ent_dataTutor = document.querySelector("#ent_t_tutor").value;
     // récupération de la div d'affichage de la sélection de tuteur
-    var ent_selectedTutor = document.querySelector("#ent_selectedTutor");
+    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
     // si on a bien sélectionné un tuteur et qu'il est différent d'un déjà sélectionné
     if (ent_dataTutor != "") {
         // incrémentation du nombre de tuteurs
@@ -448,7 +448,7 @@ function addTutor() {
 // fonction qui permet de retirer un tuteur de la sélection
 function removeTutor(tutor) {
     // récupération de la div d'affichage de la sélection de tuteur
-    var ent_selectedTutor = document.querySelector("#ent_selectedTutor");
+    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
     // suppression de l'élement cliqué
     ent_selectedTutor.removeChild(tutor);
     // décrémentation du compteur de tuteurs ajoutés
