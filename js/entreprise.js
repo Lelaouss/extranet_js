@@ -438,7 +438,7 @@ function addTutor() {
         // incrémentation du nombre de tuteurs
         ent_nbTutor++;
         // ajout du tuteur sélectionné dans la div
-        ent_selectedTutor.innerHTML += "<p class='ent_addedTutor' id='tuteur" + ent_nbTutor + "'><span class='ent_toRemoveTutor' onclick='removeTutor(tuteur" + ent_nbTutor + ")'>x</span> " + ent_dataTutor + "</p>";
+        ent_selectedTutor.innerHTML += "<p class='ent_addedTutor' id='tuteur" + ent_nbTutor + "'><span class='ent_toRemoveTutor' onclick='ent_removeAddedThing(tuteur" + ent_nbTutor + ")'>x</span> " + ent_dataTutor + "</p>";
         
         // remise à zéro du champ de datalist tuteurs
         document.querySelector("#ent_t_tutor").value = "";
@@ -446,7 +446,7 @@ function addTutor() {
 }
 
 // fonction qui permet de retirer un tuteur de la sélection
-function removeTutor(tutor) {
+function ent_removeAddedThing(tutor) {
     // récupération de la div d'affichage de la sélection de tuteur
     var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
     // suppression de l'élement cliqué
@@ -456,7 +456,7 @@ function removeTutor(tutor) {
 }
 
 // fonction qui permet de créer une activité si elle n'est pas référencée dans la datalist
-function createActivity() {
+function ent_createActivity() {
     // variables
     var ent_bFind = false;
     var i;
@@ -467,9 +467,11 @@ function createActivity() {
     // recupération de toutes les options de la datalist
     var ent_dataOptions = ent_activityDatalist.querySelectorAll("option");
     // récupération du bouton permettant l'ajout dans la datalist
-    var ent_buttonAddActivity = document.querySelector("#ent_newActivity");
+    var ent_buttonCreateActivity = document.querySelector("#ent_newActivity");
+    // récupération du bouton permettant l'ajout dans la liste des activités ajoutées "+"
+    var ent_buttonAddActivity = document.querySelector("#ent_addActivity");
 
-    // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la bdd
+    // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la datalist
     for (i=0; i<ent_dataOptions.length; i++) {
         if (ent_dataOptions[i].value.toLowerCase() == ent_newActivityName.toLowerCase()) {
             ent_bFind = true;
@@ -481,10 +483,12 @@ function createActivity() {
         // ajout d'une activité supplémentaire
         var ent_newDataId = ent_dataOptions.length + 1;
         ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + " data-id=" + ent_newDataId + ">";
-        // remise à zéro du champ activié
-        document.querySelector("#ent_t_activity").value = "";
+
         // on cache le bouton une fois l'ajout fait
-        ent_buttonAddActivity.setAttribute("class", "ent_hide");
+        ent_buttonCreateActivity.classList.add("ent_invisible");
+        // on affiche le bouton "+" une fois l'ajout fait
+        ent_buttonAddActivity.classList.remove("ent_invisible");
+        ent_buttonAddActivity.classList.add("ent_visible");
     }
 
 }
@@ -529,22 +533,27 @@ function ent_displayButton(inputId, buttonAddId, dataId, buttonPlusId) {
         // si le nom entré dans le champ input n'est au final pas présent dans le datalist
         if ((iNBContientTrue == 0) || (iMyID == 0)) {
             // on affiche le bouton permettant la création d'un nouvel élément
-            ent_buttonAdd.setAttribute("class", "ent_show");
+            ent_buttonAdd.classList.remove("ent_invisible");
+            ent_buttonAdd.classList.add("ent_visible");
             // on cache le bouton "+" permettant l'ajout de l'élément à la liste
-            ent_buttonPlus.setAttribute("class", "ent_hide");
+            ent_buttonPlus.classList.remove("ent_visible");
+            ent_buttonPlus.classList.add("ent_invisible");
         } else {
             // sinon on le laisse caché
-            ent_buttonAdd.setAttribute("class", "ent_hide");
+            ent_buttonAdd.classList.add("ent_invisible");
             // si le nom entré dans le champ input correspond bien à une des options du datalist
             if (iMyID != 0) {
                 // on affiche le bouton "+" permettant l'ajout de l'élément à la liste
-                ent_buttonPlus.setAttribute("class", "ent_show");
+                ent_buttonPlus.classList.remove("ent_invisible");
+                ent_buttonPlus.classList.add("ent_visible");
             }
         }
     } else {
         // sinon si il est vide on cache les boutons
-        ent_buttonAdd.setAttribute("class", "ent_hide");
-        ent_buttonPlus.setAttribute("class", "ent_hide");
+        ent_buttonAdd.classList.remove("ent_visible");
+        ent_buttonAdd.classList.add("ent_invisible");
+        ent_buttonPlus.classList.remove("ent_visible");
+        ent_buttonPlus.classList.add("ent_invisible");
     }
 
 }

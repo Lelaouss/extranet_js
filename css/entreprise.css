@@ -4,6 +4,11 @@
     font-size: 1em;
 }
 
+#ent_entreprises fieldset {
+    border: 1px solid #4FAA27;
+    border-radius: 10px;
+}
+
 
 /*Le tableau*/
 #ent_companies {
@@ -146,96 +151,6 @@
 }
 
 
-/*Les blocs coordonnées, représentant, activités et activités ajoutées*/
-#ent_coordonneesTotal {
-    border: 1px solid blue;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#ent_coordRepresDiv {
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 1;
-}
-
-#ent_coordonneesDiv, #ent_represDiv {
-    flex-grow: 1;
-}
-
-#ent_tutorActivityDiv {
-    border: 1px solid red;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    flex-grow: 1;
-}
-
-#ent_activityDiv, #ent_addedActivity {
-    flex-grow: 1;
-}
-
-#ent_toAddTutors {
-    padding-right: 10px;
-    text-align: right;
-}
-
-#ent_toAddTutors label {
-    padding-right: 25px;
-}
-
-#ent_listOfActivities {
-    border-right: 1px solid #87BB34;
-    padding-right: 5px;
-}
-
-#ent_listOfTutors {
-    flex-grow: 1;
-    border-left: 1px solid #87BB34;
-    padding-left: 5px;
-    text-align: center;
-    align-items: center;
-}
-
-.ent_subTitle {
-    text-decoration: underline;
-}
-
-#ent_listOfAddedTutors {
-    width: 50%;
-}
-
-
-
-/*Les classes d'alignement*/
-.ent_alignDiv {
-    display: flex;
-}
-
-.ent_columnDiv {
-    border: 1px solid yellow;
-    display: flex;
-    flex-direction: column;
-}
-
-/*Les ajouts dynamiques*/
-.ent_addedThing {
-    border: 1px solid black;
-    margin: 0;
-    margin-bottom: 2px;
-    background-color: #BDC3C7;
-}
-
-.ent_addedThing:hover {
-    cursor: default;
-    background-color: #87BB34;
-}
-
-.ent_toRemoveTutor:hover {
-    cursor: pointer;
-}
-
-
 /*Le bloc coordonnées*/
 #ent_nomMailDiv p, #ent_adressDiv1 p, #ent_adressDiv2 p {
     margin-top: 10px;
@@ -247,9 +162,182 @@
 }
 
 
+/*Les classes d'alignement*/
+.ent_alignDiv {
+    display: flex;
+}
+
+.ent_columnDiv {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/*Les blocs coordonnées, représentant, activités et activités ajoutées*/
+#ent_coordonneesTotal {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#ent_coordRepresDiv {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+#ent_coordonneesAllInput {
+    flex-wrap: wrap;
+}
+
+#ent_represDiv div {
+    padding-bottom: 5px;
+}
+
+#ent_coordonneesDiv, #ent_represDiv {
+    flex-grow: 1;
+}
+
+#ent_represDiv #ent_createRepres {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#ent_tutorActivityDiv {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+#ent_activityDiv {
+    flex-grow: 0.2;
+}
+
+#ent_addedActivity {
+    flex-grow: 1;
+}
+
+#ent_lists {
+    border-top: 2px solid #BDC3C7;
+    border-left: 2px solid #BDC3C7;
+    border-right: 2px solid #BDC3C7;
+    border-bottom: 1px solid #BDC3C7;
+}
+
+.ent_listing {
+    border-bottom: 1px solid #BDC3C7;
+}
+
+#ent_headerOfSubTitles {
+    border-bottom: 2px solid #BDC3C7;
+    justify-content: space-around;
+}
+
+.ent_subTitle {
+    text-decoration: underline;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+#ent_subTitleActivity {
+    padding-left: 30px;
+}
+
+#ent_subTitleTutor {
+    padding-right: 50px;
+}
+
+#ent_subTitlePrincipale {
+    position: relative;
+    right: 5px;
+}
+
+#ent_listOfAddedActivities {
+    flex-grow: 1;
+    border-right: 0.5px solid #BDC3C7;
+    padding-top: 5px;
+    padding-right: 5px;
+    align-items: center;
+}
+
+#ent_listOfPrincipal {
+    align-items: center;
+    width: 70px;
+    cursor: pointer;
+}
+
+#ent_listOfPrincipal span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#ent_listOfAddedTutors {
+    flex-grow: 1;
+    border-left: 0.5px solid #BDC3C7;
+    padding-top: 5px;
+    padding-left: 5px;
+    align-items: center;
+}
+
+
+/*Les ajouts dynamiques*/
+.ent_thing {
+    background-color: #4FAA27;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 2px;
+    width: 200px;
+    border: 2px solid #4FAA27;
+    border-radius: 6px 6px;
+    word-wrap: break-word;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 0.7em;
+}
+
+.ent_thing:hover {
+    background-color: #FFFFFF;
+    cursor: default;
+    color: #4FAA27;
+}
+
+.ent_toRemoveThings {
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 0.6em;
+    vertical-align: top;
+}
+
+.ent_toRemoveThings:hover {
+    cursor: pointer;
+}
+
+.ent_addedThing {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.ent_marker {
+    width: 20%;
+}
+
+
 /*Les boutons*/
 .ent_button {
     padding: 10px 20px;
+    text-decoration: none;
+    font-family: Verdana, Arial, serif;
+    font-weight: bold;
+    font-size: 11px;
+    border-radius: 10px 10px 10px 10px;
+    cursor: pointer;
+}
+
+.ent_buttonPlus {
+    padding: 5px 10px;
     text-decoration: none;
     font-family: Verdana, Arial, serif;
     font-weight: bold;
@@ -278,3 +366,22 @@
     display: inline-block;
 }
 
+.ent_visible {
+    visibility: visible;
+}
+
+.ent_invisible {
+    visibility: hidden;
+}
+
+
+
+
+
+.ent_red {
+    /*border: 1px solid red;*/
+}
+
+.ent_blue {
+    border: 1px solid blue;
+}

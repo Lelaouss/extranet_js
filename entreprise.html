@@ -109,8 +109,8 @@
                     <div id="ent_coordonneesDiv">
                         <fieldset>
                             <legend>Coordonnées</legend>
-                            <div class="ent_alignDiv" >
-                                <div class="ent_alignDiv" id="ent_nomMailDiv">
+                            <div id="ent_coordonneesAllInput" class="ent_alignDiv">
+                                <div id="ent_nomMailDiv" class="ent_alignDiv">
                                     <div>
                                         <p>
                                             <label for="ent_t_social">Raison Sociale</label><br /><input type="text" name="ent_t_social" id="ent_t_social" size="10" />
@@ -166,14 +166,15 @@
                             <div class="ent_columnDiv">
                                 <p>
                                     <label for="ent_t_repres">Sélectionner un représentant :</label><br />
-                                    <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="25" oninput="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" onkeyup="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, '')" />
+                                    <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="25" oninput="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, ent_addRepres)" onkeyup="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, ent_addRepres)" />
                                     <datalist id="ent_repres">
                                         <option value="Pagan Jean-Jacques" data-id="1" />
                                         <option value="Piron Léonce" data-id="2" />
                                     </datalist>
+                                    <input type="hidden" id="ent_addRepres" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
                                 </p>
-                                <p>
-                                    <input type="button" id="ent_newRepres" class="btn_green ent_button ent_hide" onclick="alert('Vers interface Nico')" value="créer un nouveau représentant" />
+                                <p id="ent_createRepres">
+                                    <input type="button" id="ent_newRepres" class="btn_green ent_buttonPlus ent_invisible" onclick="alert('Vers interface Nico => création d\'un individu/personnel de type représentant')" value="créer un nouveau représentant" />
                                 </p>
                             </div>
                         </fieldset>
@@ -191,8 +192,8 @@
                                         <option value="Secrétariat" data-id="2" />
                                         <option value="Tourisme" data-id="3" />
                                     </datalist>
-                                    <input type="button" id="ent_addActivity" class="btn_green ent_button ent_hide" onclick="" value="+">
-                                    <input type="button" id="ent_newActivity" class="btn_green ent_button ent_hide" onclick="createActivity()" value="Ajouter activité à la liste" />
+                                    <input type="button" id="ent_addActivity" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
+                                    <input type="button" id="ent_newActivity" class="btn_green ent_buttonPlus ent_invisible" onclick="ent_createActivity()" value="Ajouter activité à la liste" />
                                 </p>
                                 <p>
                                     <label for="ent_t_activityDetail">Détails de l'activité</label><br /><input type="text" name="ent_t_activityDetail" id="ent_t_activityDetail" size="32" />
@@ -202,37 +203,69 @@
                     <div id="ent_addedActivity">
                         <fieldset>
                             <legend>Activités ajoutées</legend>
-                            <div class="ent_columnDiv">
-                                <div id="ent_toAddTutors" class="ent_columnDiv">
-                                    <p>
-                                        <label for="ent_t_tutor">Sélectionner un tuteur :</label><br />
-                                        <input type="button" id="ent_addTutor" class="btn_green ent_button ent_hide" onclick="" value="+">
-                                        <input type="button" id="ent_newTutor" class="btn_green ent_button ent_hide" onclick="alert('Vers interface Nico')" value="créer un nouveau tuteur" />
-                                        <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="25" oninput="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" onkeyup="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" />
-                                        <datalist id="ent_tutor">
-                                            <option value="Pagan Jean-Jacques" data-id="1" />
-                                            <option value="Piron Léonce" data-id="2" />
-                                            <option value="Doe John" data-id="3" />
-                                        </datalist>
-                                    </p>
-                                </div>
+                            <div id="ent_toAddTutors" class="ent_columnDiv">
+                                <p>
+                                    <label for="ent_t_tutor">Sélectionner un tuteur :</label><br />
+                                    <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="25" oninput="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" onkeyup="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" />
+                                    <datalist id="ent_tutor">
+                                        <option value="Pagan Jean-Jacques" data-id="1" />
+                                        <option value="Piron Léonce" data-id="2" />
+                                        <option value="Doe John" data-id="3" />
+                                    </datalist>
+                                    <input type="button" id="ent_addTutor" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
+                                    <input type="button" id="ent_newTutor" class="btn_green ent_buttonPlus ent_invisible" onclick="alert('Vers interface Nico => création d\'un individu/personnel de type tuteur')" value="créer un nouveau tuteur" />
+                                </p>
                             </div>
-
-                            <div class="ent_alignDiv">
-                                <div id="ent_listOfActivities" class="ent_columnDiv">
-                                    <p class="ent_subTitle">
+                            <div id="ent_lists" class="ent_columnDiv">
+                                <div id="ent_headerOfSubTitles" class="ent_alignDiv">
+                                    <p id="ent_subTitleActivity" class="ent_subTitle">
                                         Activités ajoutées à l'entreprise
                                     </p>
-                                </div>
-                                <div id="ent_listOfTutors" class="ent_columnDiv">
-                                    <p class="ent_subTitle">
+                                    <p id="ent_subTitlePrincipale" class="ent_subTitle">
+                                        Principale
+                                    </p>
+                                    <p id="ent_subTitleTutor" class="ent_subTitle">
                                         Tuteurs ajoutés à l'activité
                                     </p>
-                                    <div id="ent_listOfAddedTutors">
-                                        <p id="tuteur1" class="ent_addedThing"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur1)">x</span> Michael Jordan</p>
-                                        <p id="tuteur2" class="ent_addedThing"><span class="ent_toRemoveTutor" onclick="removeTutor(tuteur2)">x</span> John Lennon</p>
-                                    </div>
                                 </div>
+                                <div class="ent_alignDiv ent_listing ent_red">
+                                    <div id="ent_listOfAddedActivities" class="ent_columnDiv">
+                                        <p class="ent_thing">
+                                            <span id="activity1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(activity1)">Informatique</span>
+                                        </p>
+                                    </div>
+                                    <div id="ent_listOfPrincipal" class="ent_alignDiv">
+                                        <span><img src="img/ent_marker.png" class="ent_marker" alt=""></span>
+                                    </div>
+                                    <div id="ent_listOfAddedTutors" class="ent_columnDiv">
+                                        <p class="ent_thing">
+                                            <span id="tuteur1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur1)">Michael Jordan</span>
+                                        </p>
+                                        <p class="ent_thing">
+                                            <span id="tuteur2" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur2)">John Lennon</span>
+                                        </p>
+                                    </div>                                    
+                                </div>
+
+                                <!-- à enlever... -->
+                                <div class="ent_alignDiv ent_listing ent_red">
+                                    <div id="ent_listOfAddedActivities" class="ent_columnDiv">
+                                        <p class="ent_thing">
+                                            <span id="activity1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(activity1)">jenaimarredefaireducssçameprendlatete</span>
+                                        </p>
+                                    </div>
+                                    <div id="ent_listOfPrincipal" class="ent_alignDiv">
+                                        <span><img src="img/ent_marker.png" class="ent_marker" alt="Activité Principale"></span>
+                                    </div>
+                                    <div id="ent_listOfAddedTutors" class="ent_columnDiv">
+                                        <p class="ent_thing">
+                                            <span id="tuteur1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur1)">Michael Jordan</span>
+                                        </p>
+                                        
+                                    </div>                                    
+                                </div>
+
+
                             </div>
                         </fieldset>
                     </div>
