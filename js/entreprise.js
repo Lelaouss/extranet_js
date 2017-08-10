@@ -42,11 +42,14 @@ var ent_tbody = document.getElementById("ent_tbody");
 // Récupération de la div d'affichage d'indications pour l'utilisateur
 var ent_indications = document.getElementById("ent_indications");
 
-// compteur du nombre de tuteurs sélectionnés
-var ent_nbTutor = 0;
 // compteur du nombre d'activités ajoutées
-var ent_nbActivity = 1;
+var ent_nbActivity = 0;
 
+// Stockage de l'activité en cours de sélection
+var ent_oldSelectedBlockActivity;
+
+// Stockage de l'activité principale
+var ent_oldMainActivity;
 
 
 
@@ -427,71 +430,6 @@ function ent_search() {
     ent_buildHTMLBoard(ent_arrayFinal);
 }
 
-// fonction qui permet d'ajouter plusieurs tuteurs sur une activité
-function addTutor() {
-    // recupération de la valeur du datalist tuteur
-    var ent_dataTutor = document.querySelector("#ent_t_tutor").value;
-    // récupération de la div d'affichage de la sélection de tuteur
-    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
-    // si on a bien sélectionné un tuteur et qu'il est différent d'un déjà sélectionné
-    if (ent_dataTutor != "") {
-        // incrémentation du nombre de tuteurs
-        ent_nbTutor++;
-        // ajout du tuteur sélectionné dans la div
-        ent_selectedTutor.innerHTML += "<p class='ent_addedTutor' id='tuteur" + ent_nbTutor + "'><span class='ent_toRemoveTutor' onclick='ent_removeAddedThing(tuteur" + ent_nbTutor + ")'>x</span> " + ent_dataTutor + "</p>";
-        
-        // remise à zéro du champ de datalist tuteurs
-        document.querySelector("#ent_t_tutor").value = "";
-    }
-}
-
-// fonction qui permet de retirer un tuteur de la sélection
-function ent_removeAddedThing(tutor) {
-    // récupération de la div d'affichage de la sélection de tuteur
-    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
-    // suppression de l'élement cliqué
-    ent_selectedTutor.removeChild(tutor);
-    // décrémentation du compteur de tuteurs ajoutés
-    ent_nbTutor--;
-}
-
-// fonction qui permet de créer une activité si elle n'est pas référencée dans la datalist
-function ent_createActivity() {
-    // variables
-    var ent_bFind = false;
-    var i;
-    // récupération de la datalist
-    var ent_activityDatalist = document.querySelector("#ent_activity");
-    // récupération de la valeur entrée dans le champ activité
-    var ent_newActivityName = document.querySelector("#ent_t_activity").value;
-    // recupération de toutes les options de la datalist
-    var ent_dataOptions = ent_activityDatalist.querySelectorAll("option");
-    // récupération du bouton permettant l'ajout dans la datalist
-    var ent_buttonCreateActivity = document.querySelector("#ent_newActivity");
-    // récupération du bouton permettant l'ajout dans la liste des activités ajoutées "+"
-    var ent_buttonAddActivity = document.querySelector("#ent_addActivity");
-
-    // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la datalist
-    for (i=0; i<ent_dataOptions.length; i++) {
-        if (ent_dataOptions[i].value.toLowerCase() == ent_newActivityName.toLowerCase()) {
-            ent_bFind = true;
-        }
-    }
-
-    // si le champ est renseigné et qu'il est différent d'une option possible
-    if ((ent_newActivityName != "") && (!ent_bFind)) {
-        // ajout d'une activité supplémentaire
-        var ent_newDataId = ent_dataOptions.length + 1;
-        ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + " data-id=" + ent_newDataId + ">";
-
-        // on cache le bouton une fois l'ajout fait
-        ent_buttonCreateActivity.classList.add("ent_invisible");
-        // on affiche le bouton "+" une fois l'ajout fait
-        ent_buttonAddActivity.classList.remove("ent_invisible");
-        ent_buttonAddActivity.classList.add("ent_visible");
-    }
-
-}
 
 // fonction qui permet l'affichage du bouton créer en fonction de la recherche tapée dans le datalist
 function ent_displayButton(inputId, buttonAddId, dataId, buttonPlusId) {
@@ -503,7 +441,7 @@ function ent_displayButton(inputId, buttonAddId, dataId, buttonPlusId) {
     var buttonAddId = "#"+buttonAddId.id;
     var dataId = "#"+dataId.id;
     var buttonPlusId = "#"+buttonPlusId.id;
-    
+
     // récupération de la valeur du champ datalist
     var ent_inputValue = document.querySelector(inputId).value;
     // récupération du bouton permettant l'ajout que l'on souhaite faire apparaitre
@@ -555,9 +493,253 @@ function ent_displayButton(inputId, buttonAddId, dataId, buttonPlusId) {
         ent_buttonPlus.classList.remove("ent_visible");
         ent_buttonPlus.classList.add("ent_invisible");
     }
+}
+
+
+// fonction qui permet de créer une activité si elle n'est pas référencée dans la datalist
+function ent_createActivity() {
+    // variables
+    var ent_activityFind = false;
+    var i;
+    // récupération de la datalist
+    var ent_activityDatalist = document.querySelector("#ent_activity");
+    // récupération de la valeur entrée dans le champ activité
+    var ent_newActivityName = document.querySelector("#ent_t_activity").value;
+    // recupération de toutes les options de la datalist
+    var ent_dataOptions = ent_activityDatalist.querySelectorAll("option");
+    // récupération du bouton permettant l'ajout dans la datalist
+    var ent_buttonCreateActivity = document.querySelector("#ent_newActivity");
+    // récupération du bouton permettant l'ajout dans la liste des activités ajoutées "+"
+    var ent_buttonAddActivity = document.querySelector("#ent_addActivity");
+
+    // on recherche si l'activité entrée dans le champ n'existe pas déjà dans la datalist
+    for (i=0; i<ent_dataOptions.length; i++) {
+        if (ent_dataOptions[i].value.toLowerCase() == ent_newActivityName.toLowerCase()) {
+            ent_activityFind = true;
+        }
+    }
+
+    // si le champ est renseigné et qu'il est différent d'une option possible
+    if ((ent_newActivityName != "") && (!ent_activityFind)) {
+        // ajout d'une activité supplémentaire
+        var ent_newDataId = ent_dataOptions.length + 1;
+        ent_activityDatalist.innerHTML += "<option value=" + ent_newActivityName + " data-id=" + ent_newDataId + ">";
+
+        // on cache le bouton une fois l'ajout fait
+        ent_buttonCreateActivity.classList.add("ent_invisible");
+        // on affiche le bouton "+" une fois l'ajout fait
+        ent_buttonAddActivity.classList.remove("ent_invisible");
+        ent_buttonAddActivity.classList.add("ent_visible");
+    }
+}
+
+
+// fonction qui permet de sélectionner l'activité dans laquelle on veut ajouter des tuteurs
+function ent_selectActivity(blockActivity) {
+    // variables
+    var ent_blockActivityId = "#"+blockActivity.id;
+
+    // récupération du block à sélectionner
+    var ent_blockActivity = document.querySelector(ent_blockActivityId);
+
+    // si le le block sur lequel on a cliqué ne détient pas la classe ent_selectedDynamicAdd
+    if (!ent_blockActivity.classList.contains("ent_selectedDynamicAdd")) {
+        // alors on lui ajoute
+        ent_blockActivity.classList.add("ent_selectedDynamicAdd");
+        // et on l'enlève à l'ancien block sélectionné
+        ent_oldSelectedBlockActivity.classList.remove("ent_selectedDynamicAdd");
+        ent_oldSelectedBlockActivity = ent_blockActivity;
+    }
+}
+
+
+// fonction qui permet de cocher l'activité principale de l'entreprise
+function ent_selectMainActivity(blockMain) {
+    // variables
+    var ent_blockMainId = "#"+blockMain.id;
+    var ent_oldBlockMainId;
+
+    // récupération du block à passer en principal
+    var ent_blockMain = document.querySelector(ent_blockMainId);
+
+    // si le le block sur lequel on a cliqué ne détient pas la classe ent_marker
+    if (!ent_blockMain.classList.contains("ent_marker")) {
+        // alors on lui ajoute
+        ent_blockMain.classList.add("ent_marker");
+        // et on l'enlève à l'ancien block sélectionné
+        ent_oldBlockMainId = "#"+ent_oldMainActivity.id;
+        ent_oldMainActivity = document.querySelector(ent_oldBlockMainId);
+        ent_oldMainActivity.classList.remove("ent_marker");
+        ent_oldMainActivity = ent_blockMain;
+    }
+}
+
+
+// fonction permettant l'ajout d'une activité
+function ent_addActivityToList() {
+    // variables
+    var i, ent_blockToAdd, ent_blockId;
+    var ent_activityFind = false;
+
+    // récupération du tableau de listing des activités et tuteurs
+    var ent_list = document.querySelector("#ent_lists");
+
+    // récupération du nom de l'activité présente dans le champ "Sélectionner une activité"
+    var ent_nameOfActivity = document.querySelector("#ent_t_activity").value;
+
+    // si une activité a déjà été ajoutée
+    if (ent_nbActivity != 0) {
+        // on test si l'activité que l'on souhaite ajouter ne l'est pas déjà
+        for (i = 1; i <= ent_nbActivity; i++) {
+            if (ent_nameOfActivity == document.querySelector("#ent_activity" + i).textContent) {
+                ent_activityFind = true;
+            }
+        }
+    }
+
+    // si il n'y pas d'autre activité déjà ajoutée ou que l'activité n'a pas été trouvée parmis celles déjà présentes
+    if (!ent_activityFind) {
+        // on incrémente le nombre d'activité ajoutées
+        ent_nbActivity++;
+
+        // on crée le block à ajouter
+        ent_blockToAdd = "<div id='ent_block"+ent_nbActivity+"' onclick='ent_selectActivity(ent_block"+ent_nbActivity+")'" + " class='ent_alignDiv ent_listing ent_selectedDynamicAdd'><div id='ent_listOfAddedActivities"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedActivities'><p class='ent_thing'><span class='ent_toRemoveThings'>x</span><span  id='ent_activity"+ent_nbActivity + "' class='ent_addedThing'>"+ent_nameOfActivity+"</span></p></div><div id='ent_mainActivity"+ent_nbActivity + "' onclick='ent_selectMainActivity(ent_mainActivity"+ent_nbActivity+")'" + " class='ent_alignDiv ent_mainActivity'></div><div id='ent_listOfAddedTutors"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedTutors'></div></div>";
+
+        // on l'ajoute
+        ent_list.innerHTML += ent_blockToAdd;
+        // on vide le champ d'ajout
+        document.querySelector("#ent_t_activity").value = "";
+        // on cache le bouton "+"
+        document.querySelector("#ent_addActivity").classList.remove("ent_visible");
+        document.querySelector("#ent_addActivity").classList.add("ent_invisible");
+
+        // si il existe déjà un block d'activités ajoutées on lui enlève la classe "ent_selectedDynamicAdd"
+        if (ent_nbActivity > 1) {
+
+            ent_oldBlockId = "#"+ent_oldSelectedBlockActivity.id;
+            ent_oldSelectedBlockActivity = document.querySelector(ent_oldBlockId);
+            ent_oldSelectedBlockActivity.classList.remove("ent_selectedDynamicAdd");
+
+            ent_blockId = "#ent_block"+ent_nbActivity
+            ent_oldSelectedBlockActivity = document.querySelector(ent_blockId);
+        } else {
+            // on stocke le block sélectionné dans la variable globale
+            ent_oldSelectedBlockActivity = document.querySelector("#ent_block1");
+
+            // si c'est le premier ajout d'activité on lui attribut la classe correspondant à l'activité prinicipale
+            ent_oldMainActivity = document.querySelector("#ent_mainActivity1");
+            ent_oldMainActivity.classList.add("ent_marker");
+        }
+    } else if (ent_activityFind) {
+        // sinon on ne l'ajoute pas et on informe l'utilisateur
+        alert("Cette activité a déjà été ajoutée");
+    }
 
 }
 
+
+// fonction qui permet l'ajout d'un tuteur sur une activité
+ function ent_addTutor() {
+    // variables
+    var i;
+    var ent_tutorFind = false;
+
+    // récupération du nom du tuteur rentré dans le champ
+    var ent_tutorName = document.querySelector("#ent_t_tutor").value;
+
+    // si au moins une activité a déjà été ajoutée
+    if (ent_nbActivity > 0) {
+        // récupération du nombre de tuteurs déjà ajoutés dans l'élement sélectionné
+        var ent_nbTutor = ent_oldSelectedBlockActivity.lastElementChild.childElementCount;
+        var ent_tutorId = ent_nbTutor + 1;
+
+        // récupération du numéro de la ligne sélectionnée
+        var ent_selectedLineId = ent_oldSelectedBlockActivity.id.substring(9);
+
+        // récupération du contenu de l'élément sélectionné
+        var ent_blockOfSelectionnedTutorsDiv = document.querySelector("#ent_listOfAddedTutors" + ent_selectedLineId);
+        // récupération de tous les paragraphes
+        var ent_allPara = ent_blockOfSelectionnedTutorsDiv.querySelectorAll("p");
+
+        // on test si le tuteur n'a pas déjà été ajouté à l'activité auparavant
+        for (i=0; i < ent_nbTutor; i++) {
+            if (ent_tutorName == ent_allPara[i].lastElementChild.textContent) {
+                ent_tutorFind = true;
+            }
+        }
+
+        // si on il n'y a pas de correspondance avec un tuteur déjà ajouté
+        if (!ent_tutorFind) {
+            // tuteur à ajouter
+            var ent_tutorToAdd = "<p class='ent_thing'><span class='ent_toRemoveThings'>x</span><span id='tuteur"+ ent_tutorId + "ofActivity"+ ent_selectedLineId +"' class='ent_addedThing'>"+ ent_tutorName +"</span></p>";
+
+            // ajout dans le block liste des tuteurs
+            ent_oldSelectedBlockActivity.lastElementChild.innerHTML += ent_tutorToAdd;
+
+            // on vide le champ d'ajout des tuteurs
+            document.querySelector("#ent_t_tutor").value = "";
+            // on cache le bouton "+"
+            document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
+            document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
+
+        } else if (ent_tutorFind) {
+            // sinon on informe l'utilisateur que le tuteur a déjà été ajouté
+            alert("Ce tuteur a déjà été ajouté pour cette activité");
+        }
+    } else {
+        // sinon on informe l'utilisateur qu'il doit d'abord ajouter une activité
+        alert("Veuillez d'abord ajouter une activité");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*// fonction qui permet de retirer un tuteur de la sélection
+function ent_removeAddedThing(tutor) {
+    // récupération de la div d'affichage de la sélection de tuteur
+    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
+    // suppression de l'élement cliqué
+    ent_selectedTutor.removeChild(tutor);
+    // décrémentation du compteur de tuteurs ajoutés
+    ent_nbTutor--;
+} */
+
+
+
+
+
+
+
+
+/*  A VOIR SI POSSIBLE........
+// fonction qui permet de sélectionner l'activité dans laquelle on veut ajouter des tuteurs
+function ent_selectActivityMain(blockId, classToAdd, oldElement) {
+    // variables
+    var ent_blockId = "#"+blockId.id;
+
+    // récupération du block à sélectionner
+    var ent_block = document.querySelector(ent_blockId);
+
+    // si le le block sur lequel on a cliqué ne détient pas la classe ent_selectedDynamicAdd
+    if (!ent_block.classList.contains(classToAdd)) {
+        // alors on lui ajoute
+        ent_block.classList.add(classToAdd);
+        // et on l'enlève à l'ancien block sélectionné
+        oldElement.classList.remove(classToAdd);
+        oldElement = ent_block;
+    }
+}
+*/
 
 
 /*
@@ -588,13 +770,11 @@ tester("ajax", "seb", "web");
 tester("VueJS", "jack", "web");
 
 
-console.log( data= $('#ent_activity option').filter(function() {
-        return this.value == $('#ent_t_activity').val();
-    }).data("id") );
 
-    querySelector(#ent_repres)
-    var tata = querySelectorAll(option)
-    tata[0].attributes[1].value == champ.value
+
+
+<p class='ent_thing'></p>
+
 
 */
 

@@ -150,9 +150,9 @@
                                         <p>
                                             <label for="ent_t_country">Pays</label><br /><input list="ent_country" type="text" name="ent_t_country" id="ent_t_country" size="10" />
                                             <datalist id="ent_country">
-                                                <option value="France">
-                                                <option value="Espagne">
-                                                <option value="Japon">
+                                                <option value="France"></option>
+                                                <option value="Espagne"></option>
+                                                <option value="Japon"></option>
                                             </datalist>
                                         </p>
                                     </div>
@@ -168,8 +168,8 @@
                                     <label for="ent_t_repres">Sélectionner un représentant :</label><br />
                                     <input list="ent_repres" type="text" id="ent_t_repres" name="ent_t_repres" size="25" oninput="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, ent_addRepres)" onkeyup="ent_displayButton(ent_t_repres, ent_newRepres, ent_repres, ent_addRepres)" />
                                     <datalist id="ent_repres">
-                                        <option value="Pagan Jean-Jacques" data-id="1" />
-                                        <option value="Piron Léonce" data-id="2" />
+                                        <option value="Pagan Jean-Jacques" data-id="1"></option>
+                                        <option value="Piron Léonce" data-id="2"></option>
                                     </datalist>
                                     <input type="hidden" id="ent_addRepres" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
                                 </p>
@@ -188,11 +188,11 @@
                                     <label for="ent_t_activity">Sélectionner une activité :</label><br />
                                     <input list="ent_activity" type="text" id="ent_t_activity" name="ent_t_activity" size="20" oninput="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" onkeyup="ent_displayButton(ent_t_activity, ent_newActivity, ent_activity, ent_addActivity)" />
                                     <datalist id="ent_activity">
-                                        <option value="Informatique" data-id="1" />
-                                        <option value="Secrétariat" data-id="2" />
-                                        <option value="Tourisme" data-id="3" />
+                                        <option value="Informatique" data-id="1"></option>
+                                        <option value="Secrétariat" data-id="2"></option>
+                                        <option value="Tourisme" data-id="3"></option>
                                     </datalist>
-                                    <input type="button" id="ent_addActivity" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
+                                    <input type="button" id="ent_addActivity" class="btn_green ent_buttonPlus ent_invisible" onclick="ent_addActivityToList()" value="+">
                                     <input type="button" id="ent_newActivity" class="btn_green ent_buttonPlus ent_invisible" onclick="ent_createActivity()" value="Ajouter activité à la liste" />
                                 </p>
                                 <p>
@@ -206,13 +206,13 @@
                             <div id="ent_toAddTutors" class="ent_columnDiv">
                                 <p>
                                     <label for="ent_t_tutor">Sélectionner un tuteur :</label><br />
-                                    <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="25" oninput="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" onkeyup="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_addTutor)" />
+                                    <input list="ent_tutor" type="text" id="ent_t_tutor" name="ent_t_tutor" size="25" oninput="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_toAddTutor)" onkeyup="ent_displayButton(ent_t_tutor, ent_newTutor, ent_tutor, ent_toAddTutor)" />
                                     <datalist id="ent_tutor">
-                                        <option value="Pagan Jean-Jacques" data-id="1" />
-                                        <option value="Piron Léonce" data-id="2" />
-                                        <option value="Doe John" data-id="3" />
+                                        <option value="Pagan Jean-Jacques" data-id="1"></option>
+                                        <option value="Piron Léonce" data-id="2"></option>
+                                        <option value="Doe John" data-id="3"></option>
                                     </datalist>
-                                    <input type="button" id="ent_addTutor" class="btn_green ent_buttonPlus ent_invisible" onclick="" value="+">
+                                    <input type="button" id="ent_toAddTutor" class="btn_green ent_buttonPlus ent_invisible" onclick="ent_addTutor()" value="+">
                                     <input type="button" id="ent_newTutor" class="btn_green ent_buttonPlus ent_invisible" onclick="alert('Vers interface Nico => création d\'un individu/personnel de type tuteur')" value="créer un nouveau tuteur" />
                                 </p>
                             </div>
@@ -228,44 +228,48 @@
                                         Tuteurs ajoutés à l'activité
                                     </p>
                                 </div>
-                                <div class="ent_alignDiv ent_listing ent_red">
-                                    <div id="ent_listOfAddedActivities" class="ent_columnDiv">
-                                        <p class="ent_thing">
-                                            <span id="activity1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(activity1)">Informatique</span>
-                                        </p>
-                                    </div>
-                                    <div id="ent_listOfPrincipal" class="ent_alignDiv">
-                                        <span><img src="img/ent_marker.png" class="ent_marker" alt=""></span>
-                                    </div>
-                                    <div id="ent_listOfAddedTutors" class="ent_columnDiv">
-                                        <p class="ent_thing">
-                                            <span id="tuteur1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur1)">Michael Jordan</span>
-                                        </p>
-                                        <p class="ent_thing">
-                                            <span id="tuteur2" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur2)">John Lennon</span>
-                                        </p>
-                                    </div>                                    
+                                <div id="ent_allAddedActivities">
+
+
+                                    <!--<div id="ent_block1" onclick="ent_selectActivity(ent_block1)" class="ent_alignDiv ent_listing ent_selectedDynamicAdd">-->
+                                        <!--<div id="ent_listOfAddedActivities1" class="ent_columnDiv ent_listOfAddedActivities">-->
+                                            <!--<p class="ent_thing">-->
+                                                <!--<span class="ent_toRemoveThings">x</span><span  id="ent_activity1" class="ent_addedThing">Informatique</span>-->
+                                            <!--</p>-->
+                                        <!--</div>-->
+                                        <!--<div id="ent_mainActivity1" onclick="ent_selectMainActivity(ent_mainActivity1)" class="ent_alignDiv ent_mainActivity ent_marker">-->
+                                        <!--</div>-->
+                                        <!--<div id="ent_listOfAddedTutors1" class="ent_columnDiv ent_listOfAddedTutors">-->
+                                            <!--<p class="ent_thing">-->
+                                                <!--<span id="tuteur1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur1)">Michael Jordan</span>-->
+                                            <!--</p>-->
+                                            <!--<p class="ent_thing">-->
+                                                <!--<span id="tuteur2" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur2)">John Lennon</span>-->
+                                            <!--</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+
+                                    <!--&lt;!&ndash; ...................................à enlever.......................................................................... &ndash;&gt;-->
+                                    <!--<div id="ent_block2" onclick="ent_selectActivity(ent_block2)" class="ent_alignDiv ent_listing">-->
+                                        <!--<div id="ent_listOfAddedActivities2" class="ent_columnDiv ent_listOfAddedActivities">-->
+                                            <!--<p class="ent_thing">-->
+                                                <!--<span class="ent_toRemoveThings">x</span><span id="ent_activity2" class="ent_addedThing">Secrétariat</span>-->
+                                            <!--</p>-->
+                                        <!--</div>-->
+                                        <!--<div id="ent_mainActivity2" onclick="ent_selectMainActivity(ent_mainActivity2)" class="ent_alignDiv ent_mainActivity">-->
+                                        <!--</div>-->
+                                        <!--<div id="ent_listOfAddedTutors2" class="ent_columnDiv ent_listOfAddedTutors">-->
+                                            <!--<p class="ent_thing">-->
+                                                <!--<span id="tuteur3" class="ent_toRemoveThings">x</span><span class="ent_addedThing">Michael Jordan</span>-->
+                                            <!--</p>-->
+
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+
+
                                 </div>
-
-                                <!-- à enlever... -->
-                                <div class="ent_alignDiv ent_listing ent_red">
-                                    <div id="ent_listOfAddedActivities" class="ent_columnDiv">
-                                        <p class="ent_thing">
-                                            <span id="activity1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(activity1)">jenaimarredefaireducssçameprendlatete</span>
-                                        </p>
-                                    </div>
-                                    <div id="ent_listOfPrincipal" class="ent_alignDiv">
-                                        <span><img src="img/ent_marker.png" class="ent_marker" alt="Activité Principale"></span>
-                                    </div>
-                                    <div id="ent_listOfAddedTutors" class="ent_columnDiv">
-                                        <p class="ent_thing">
-                                            <span id="tuteur1" class="ent_toRemoveThings">x</span><span class="ent_addedThing" onclick="ent_removeAddedThing(tuteur1)">Michael Jordan</span>
-                                        </p>
-                                        
-                                    </div>                                    
-                                </div>
-
-
                             </div>
                         </fieldset>
                     </div>
