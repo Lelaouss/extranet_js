@@ -380,15 +380,3 @@
 .ent_invisible {
     visibility: hidden;
 }
-
-
-
-
-
-.ent_red {
-    /*border: 1px solid red;*/
-}
-
-.ent_blue {
-    border: 1px solid blue;
-}

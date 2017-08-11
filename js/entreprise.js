@@ -603,7 +603,7 @@ function ent_addActivityToList() {
         ent_nbActivity++;
 
         // on crée le block à ajouter
-        ent_blockToAdd = "<div id='ent_block"+ent_nbActivity+"' onclick='ent_selectActivity(ent_block"+ent_nbActivity+")'" + " class='ent_alignDiv ent_listing ent_selectedDynamicAdd'><div id='ent_listOfAddedActivities"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedActivities'><p class='ent_thing'><span class='ent_toRemoveThings'>x</span><span  id='ent_activity"+ent_nbActivity + "' class='ent_addedThing'>"+ent_nameOfActivity+"</span></p></div><div id='ent_mainActivity"+ent_nbActivity + "' onclick='ent_selectMainActivity(ent_mainActivity"+ent_nbActivity+")'" + " class='ent_alignDiv ent_mainActivity'></div><div id='ent_listOfAddedTutors"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedTutors'></div></div>";
+        ent_blockToAdd = "<div id='ent_block"+ent_nbActivity+"' onclick='ent_selectActivity(ent_block"+ent_nbActivity+")'" + " class='ent_alignDiv ent_listing ent_selectedDynamicAdd'><div id='ent_listOfAddedActivities"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedActivities'><p class='ent_thing'><span onclick='ent_removeAddedActivity(\"ent_activity"+ent_nbActivity+"\")' class='ent_toRemoveThings'>x</span><span  id='ent_activity"+ent_nbActivity + "' class='ent_addedThing'>"+ent_nameOfActivity+"</span></p></div><div id='ent_mainActivity"+ent_nbActivity + "' onclick='ent_selectMainActivity(ent_mainActivity"+ent_nbActivity+")'" + " class='ent_alignDiv ent_mainActivity'></div><div id='ent_listOfAddedTutors"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedTutors'></div></div>";
 
         // on l'ajoute
         ent_list.innerHTML += ent_blockToAdd;
@@ -668,10 +668,20 @@ function ent_addActivityToList() {
             }
         }
 
-        // si on il n'y a pas de correspondance avec un tuteur déjà ajouté
+        // si il n'y a pas de correspondance avec un tuteur déjà ajouté
         if (!ent_tutorFind) {
+            // si il y a déjà au moins un tuteur d'ajouté
+            if (ent_oldSelectedBlockActivity.lastElementChild.childElementCount > 0) {
+                // on cherche si l'id du tuteur que l'on souhaite ajouter ne soit pas déjà utilisée
+                var ent_idToFind = "tuteur" + ent_tutorId + "ofActivity" + ent_selectedLineId;
+                if (ent_oldSelectedBlockActivity.lastElementChild.lastElementChild.lastElementChild.id == ent_idToFind) {
+                    // on augmente le chiffre de l'id du tuteur à ajouter
+                    ent_tutorId++;
+                }
+            }
+
             // tuteur à ajouter
-            var ent_tutorToAdd = "<p class='ent_thing'><span class='ent_toRemoveThings'>x</span><span id='tuteur"+ ent_tutorId + "ofActivity"+ ent_selectedLineId +"' class='ent_addedThing'>"+ ent_tutorName +"</span></p>";
+            var ent_tutorToAdd = "<p class='ent_thing'><span onclick='ent_removeAddedTutor(\"tuteur"+ent_tutorId+"ofActivity"+ent_selectedLineId +"\")' class='ent_toRemoveThings'>x</span><span id='tuteur"+ ent_tutorId + "ofActivity"+ ent_selectedLineId +"' class='ent_addedThing'>"+ ent_tutorName +"</span></p>";
 
             // ajout dans le block liste des tuteurs
             ent_oldSelectedBlockActivity.lastElementChild.innerHTML += ent_tutorToAdd;
@@ -693,28 +703,35 @@ function ent_addActivityToList() {
 }
 
 
+// fonction qui permet de retirer un tuteur de la liste des tuteurs ajoutés
+function ent_removeAddedTutor(tutorId) {
+    var tutorId = "#"+tutorId;
+    // récupération du tuteur à retirer
+    var ent_tutorToRemove = document.querySelector(tutorId).parentElement;
+
+    // on retire le tuteur et son block
+    ent_tutorToRemove.parentElement.removeChild(ent_tutorToRemove);
+}
 
 
+// fonction qui permet de retirer une activité
+function ent_removeAddedActivity(activityId) {
+    // on test si il y a toujours un tuteur d'ajouté à l'activité
+    if (ent_oldSelectedBlockActivity.lastElementChild.childElementCount != 0) {
+        alert("Veuillez d'abord retirer tous les tuteurs rattachés à cette activité");
+    } else {
+        var activityId = "#"+activityId;
+        // récupération du block de l'activité à retirer
+        var ent_activityToRemove = document.querySelector(activityId).parentElement.parentElement.parentElement;
 
+        // on retire l'activité et son block du tableau
+        var ent_lists = document.querySelector("#ent_lists");
+        ent_lists.removeChild(ent_activityToRemove);
 
-
-
-
-
-
-
-
-/*// fonction qui permet de retirer un tuteur de la sélection
-function ent_removeAddedThing(tutor) {
-    // récupération de la div d'affichage de la sélection de tuteur
-    var ent_selectedTutor = document.querySelector("#ent_listOfTutors");
-    // suppression de l'élement cliqué
-    ent_selectedTutor.removeChild(tutor);
-    // décrémentation du compteur de tuteurs ajoutés
-    ent_nbTutor--;
-} */
-
-
+        // on décrémente le compteur d'activités  ajoutées
+        ent_nbActivity--;
+    }
+}
 
 
 
