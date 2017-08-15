@@ -1,8 +1,13 @@
-// VARIABLES GLOBALES //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// VARIABLES GLOBALES //////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Tableaux JS
 var ent_arrayJS = new Array();
 var ent_arrayJSToSplit = new Array();
+
+// Les activités et tuteurs de l'entreprise
+var ent_company = new Array();
 
 // Compteur de lignes du tableau HTML
 var ent_numLines = 0;
@@ -21,16 +26,10 @@ var ent_t_adressCompl1 = document.getElementById("ent_t_adressCompl1");
 var ent_t_adressCompl2 = document.getElementById("ent_t_adressCompl2");
 var ent_t_adressCP = document.getElementById("ent_t_adressCP");
 var ent_t_adressCity = document.getElementById("ent_t_adressCity");
-var ent_t_activity = document.getElementById("ent_t_activity");
+var ent_t_adressCountry = document.getElementById("ent_t_country");
+var ent_t_represName = document.getElementById("ent_t_repres");
 var ent_t_activityDetail = document.getElementById("ent_t_activityDetail");
-var ent_t_represName = document.getElementById("ent_t_represName");
-var ent_t_represPrenom = document.getElementById("ent_t_represPrenom");
-var ent_t_represMail = document.getElementById("ent_t_represMail");
-var ent_t_represTel = document.getElementById("ent_t_represTel");
-var ent_t_tutorName = document.getElementById("ent_t_tutorName");
-var ent_t_tutorPrenom = document.getElementById("ent_t_tutorPrenom");
-var ent_t_tutorMail = document.getElementById("ent_t_tutorMail");
-var ent_t_tutorTel = document.getElementById("ent_t_tutorTel");
+var ent_t_tutorName = document.getElementById("ent_t_tutor");
 
 // Récupération des champs de recherche
 var ent_t_searchName = document.getElementById("ent_t_searchName");
@@ -42,38 +41,61 @@ var ent_tbody = document.getElementById("ent_tbody");
 // Récupération de la div d'affichage d'indications pour l'utilisateur
 var ent_indications = document.getElementById("ent_indications");
 
-// compteur du nombre d'activités ajoutées
-var ent_nbActivity = 0;
-
 // Stockage de l'activité en cours de sélection
 var ent_oldSelectedBlockActivity;
+// Stockage de l'indice de l'activité en cours de sélection
+var ent_activitySelected;
+
+// Stockage des tuteurs de l'activité en cours de sélection
+var ent_tutorsSelected;
 
 // Stockage de l'activité principale
 var ent_oldMainActivity;
 
 
 
-// FONCTIONS //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////// FONCTIONS ////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // fonction d'ajout de ligne dans les tableaux JS
 function ent_addLine() {
+    // variables
+    var i;
+    var ent_activities = "";
     // création du nouveau tableau JS splité pour création du board HTML
     var ent_arraySplitted = new Array();
 
-    // remplissage du tableau JS globale si la raison sociale de l'entreprise est au minimum renseignée
+    // récupération de l'index de l'activité principale
+    if (ent_oldMainActivity != undefined) {
+        var ent_mainActivityIndex = ent_oldMainActivity.id.substr(16)-1;
+    }
+
+    // remplissage du tableau JS globale si la raison sociale de l'entreprise est au minimum renseignée avec une activité au moins
     // cas quand aucune recherche n'est en cours (filtres désactivés)
-    if ((ent_t_social.value != "") && (ent_t_searchName.value == "") && (ent_t_searchRepre.value == "") && (ent_t_searchActivity.value == "")) {
-        ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+    if ((ent_t_social.value != "") && (ent_company != "") && (ent_t_searchName.value == "") && (ent_t_searchRepre.value == "") && (ent_t_searchActivity.value == "")) {
+        for (i=0; i<ent_company.length; i++) {
+            ent_activities += ent_company[i]+"|";
+        }
+        ent_activities = ent_activities.substr(0, ent_activities.length-1);
+
+        ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
-        ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+        ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
     // cas quand les filtres sont activés
-    } else if (ent_t_social.value != "") {
-        ent_arrayJS[ent_arrayJS.length] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
+    } else if ((ent_t_social.value != "") && (ent_company != "")) {
+        for (i=0; i<ent_company.length; i++) {
+            ent_activities += ent_company[i]+"|";
+        }
+        ent_activities = ent_activities.substr(0, ent_activities.length-1);
+
+        ent_arrayJS[ent_arrayJS.length] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
-        ent_arrayJSToSplit[ent_arrayJSToSplit.length] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+        ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
     // sinon on affiche un message d'alerte et on stop la fonction
     } else {
-        alert("Veuillez renseigner un nom d'entreprise");
+        alert("Veuillez renseigner un nom d'entreprise et lui attribuer au moins un secteur d'activité");
         return;
     }
     // on vide le tableau HTML
@@ -82,20 +104,23 @@ function ent_addLine() {
     ent_buildHTMLBoard(ent_arrayJSToSplit);
     // on vide les champs de recherche
     ent_searchRaz();
+    // on vide la vue HTML des activités et son tableau JS
+    ent_clearActivities();
+    ent_company = [];
 }
 
 
 // fonction qui vide tous les champs du formulaire
 function ent_raz() {
     // on vide les champs du formulaire
-    ent_t_social.value = ent_t_mail.value = ent_t_phone.value = ent_t_fax.value = ent_t_adress.value = ent_t_adressCompl2.value = ent_t_adressCompl1.value = ent_t_adressCP.value = ent_t_adressCity.value = ent_t_activity.value = ent_t_activityDetail.value = ent_t_represName.value = ent_t_represPrenom.value = ent_t_represMail.value = ent_t_represTel.value = ent_t_tutorName.value = ent_t_tutorPrenom.value = ent_t_tutorMail.value = ent_t_tutorTel.value = "";
+    ent_t_social.value = ent_t_mail.value = ent_t_phone.value = ent_t_fax.value = ent_t_adress.value = ent_t_adressCompl2.value = ent_t_adressCompl1.value = ent_t_adressCP.value = ent_t_adressCity.value = ent_t_adressCountry.value = ent_t_activity.value = ent_t_activityDetail.value = ent_t_represName.value = ent_t_tutorName.value = "";
 }
 
 
 // fonction qui vide les champs de recherche
 function ent_searchRaz() {
     // on vide les champs de recherche
-    ent_t_searchName.value = ent_t_searchActivity.value = ent_t_searchRepre.value = "";
+    ent_t_searchName.value = ent_t_searchRepre.value = ent_t_searchActivity.value = "";
     // indication à l'utilisateur sur l'entreprise en cours d'édition
     ent_indications.textContent = "Aucune entreprise en cours d'édition.";
 }
@@ -133,16 +158,22 @@ function ent_recupLine(iSelectedLine) {
     ent_t_adressCompl1.value = ent_arraySplittedSelected[6];
     ent_t_adressCP.value = ent_arraySplittedSelected[7];
     ent_t_adressCity.value = ent_arraySplittedSelected[8];
-    ent_t_activity.value = ent_arraySplittedSelected[9];
-    ent_t_activityDetail.value = ent_arraySplittedSelected[10];
-    ent_t_represName.value = ent_arraySplittedSelected[11];
-    ent_t_represPrenom.value = ent_arraySplittedSelected[12];
-    ent_t_represMail.value = ent_arraySplittedSelected[13];
-    ent_t_represTel.value = ent_arraySplittedSelected[14];
-    ent_t_tutorName.value = ent_arraySplittedSelected[15];
-    ent_t_tutorPrenom.value = ent_arraySplittedSelected[16];
-    ent_t_tutorMail.value = ent_arraySplittedSelected[17];
-    ent_t_tutorTel.value = ent_arraySplittedSelected[18];
+    ent_t_adressCountry.value = ent_arraySplittedSelected[9];
+    ent_t_represName.value = ent_arraySplittedSelected[10];
+
+    // reformation du tableau des activités et tuteurs de l'entreprise
+    ent_company = ent_arraySplittedSelected[11].split("|");
+    for (i=0; i<ent_company.length; i++) {
+        ent_company[i] = [ent_company[i].split(",")];
+    }
+    // for (i=0; i<ent_company[i]; i++) {
+    //
+    // }
+    // console.log("ent_company => "+ ent_company);
+
+    // on génère la vue HTML des activités et tuteurs de l'entreprise
+    ent_clearActivities();
+    ent_buildActivities();
 
     // mise en évidence la ligne sélectionnée
     // récupération de la ligne cliquée sur le tableau HTML
@@ -162,7 +193,7 @@ function ent_recupLine(iSelectedLine) {
         document.getElementById("ent_ajouter").classList.toggle("ent_hide");
         // indication à l'utilisateur sur l'entreprise en cours d'édition
         ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
-        // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
+    // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine != iSelectedLine)) {
         // on enleve la classe selected à la ligne déjà sélectionnée
         document.getElementById("ent_line"+ent_selectedLine).classList.remove("ent_selected");
@@ -172,7 +203,7 @@ function ent_recupLine(iSelectedLine) {
         ent_selectedLine = iSelectedLine;
         // indication à l'utilisateur sur l'entreprise en cours d'édition
         ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
-        // sinon si la ligne sélectionnée est la même que la selection en cours
+    // sinon si la ligne sélectionnée est la même que la selection en cours
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine == iSelectedLine)) {
         // on enlève la classe
         ent_clickedLine.classList.toggle("ent_selected");
@@ -184,6 +215,9 @@ function ent_recupLine(iSelectedLine) {
         ent_indications.textContent = "Aucune entreprise en cours d'édition.";
         // réinitialisation du nombres de lignes sélectionnées
         ent_nbClickedLines = 0;
+        // on vide la vue HTML des activités
+        ent_clearActivities();
+        ent_company = [];
     }
 }
 
@@ -254,7 +288,7 @@ function ent_buildHTMLBoard(tableau) {
             // incrémentation du compteur des IDs et lignes
             ent_numLines++;
         }
-        // si il existe plus de 6 entreprises
+    // si il existe plus de 6 entreprises
     } else {
         // on reconstruit chaque ligne en HTML en parcourant le tableau JS
         for (ent_iBuild=0; ent_iBuild<tableau.length; ent_iBuild++) {
@@ -323,6 +357,9 @@ function ent_delLine() {
         ent_search();
         // nettoyage de la zone d'indication d'édition
         ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+        // on vide la vue HTML des activités et tuteurs
+        ent_clearActivities();
+        ent_company = [];
         // sinon fin de la fonction
     } else {
         return;
@@ -334,17 +371,23 @@ function ent_delLine() {
 function ent_modifyLine() {
     // variables
     var ent_modifyConfirm;
+    var ent_activities = "";
 
     // on demande la confirmation de la modification de la ligne en la remplaçant par ce qu'il y a dans les champs de remplissage
     ent_modifyConfirm = confirm("Êtes-vous sûr de vouloir modifier cette ligne en la remplaçant par les valeurs actuelles ?");
 
     // si la modification est confirmée
     if (ent_modifyConfirm) {
-        // si le nom de l'entreprise est au moins renseigné
-        if (ent_t_social.value != "") {
+        // si le nom de l'entreprise et son secteur d'activité sont au moins renseignés
+        if ((ent_t_social.value != "") && (ent_company != "")) {
+            for (i=0; i<ent_company.length; i++) {
+                ent_activities += ent_company[i]+"|";
+            }
+            ent_activities = ent_activities.substr(0, ent_activities.length-1);
+
             // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
-            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value+"§"+ent_t_represName.value+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-            ent_arrayJSToSplit[ent_indice] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_t_activity.value+"§"+ent_t_activityDetail.value;
+            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
+            ent_arrayJSToSplit[ent_indice] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
 
         // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
         } else {
@@ -359,6 +402,9 @@ function ent_modifyLine() {
         ent_search();
         // nettoyage de la zone d'indication d'édition
         ent_indications.textContent = "Aucune entreprise en cours d'édition.";
+        // on vide la vue HTML des activités
+        ent_clearActivities();
+        ent_company = [];
         // si la modification est annulée on arrête la fonction
     } else {
         return;
@@ -537,7 +583,12 @@ function ent_createActivity() {
 // fonction qui permet de sélectionner l'activité dans laquelle on veut ajouter des tuteurs
 function ent_selectActivity(blockActivity) {
     // variables
-    var ent_blockActivityId = "#"+blockActivity.id;
+    var ent_blockActivityId = "#"+blockActivity.id
+
+    // stockage de l'index de l'activité en cours de sélection
+    ent_activitySelected = blockActivity.id;
+    ent_activitySelected = ent_activitySelected.substr(9);
+    ent_activitySelected = ent_activitySelected - 1;
 
     // récupération du block à sélectionner
     var ent_blockActivity = document.querySelector(ent_blockActivityId);
@@ -549,6 +600,10 @@ function ent_selectActivity(blockActivity) {
         // et on l'enlève à l'ancien block sélectionné
         ent_oldSelectedBlockActivity.classList.remove("ent_selectedDynamicAdd");
         ent_oldSelectedBlockActivity = ent_blockActivity;
+        // on stock les tuteurs de l'activité en cours de sélection
+        ent_tutorsSelected = ent_blockActivity.lastElementChild.children;
+        // on affiche les détails de l'activité sélectionnée dans le champ "détails activités"
+        // document.querySelector("#ent_t_activityDetail").value = ent_company[ent_activitySelected][0][1];
     }
 }
 
@@ -575,23 +630,96 @@ function ent_selectMainActivity(blockMain) {
 }
 
 
+// fonction qui vide le tableau de la vue HTML
+function ent_clearActivities() {
+    // récupération du tableau à vider puis reconstruire
+    var ent_activityBoard = document.querySelector("#ent_lists");
+
+    // vidage du tableau
+    ent_activityBoard.innerHTML = "<div id='ent_headerOfSubTitles' class='ent_alignDiv'><p id='ent_subTitleActivity' class='ent_subTitle'>Activités ajoutées à l'entreprise</p><p id='ent_subTitlePrincipale' class='ent_subTitle'>Principale</p><p id='ent_subTitleTutor' class='ent_subTitle'>Tuteurs ajoutés à l'activité</p></div>";
+}
+
+
+// fonction qui génère la vue HTML des activités de l'entreprise
+function ent_buildActivities() {
+    // variables
+    var i, ent_id, ent_blockToAdd, ent_tutorId, ent_tutorToAdd, ent_listOfAddedTutorsId, ent_activityBlock;
+
+    // récupération du tableau à vider puis reconstruire
+    var ent_activityBoard = document.querySelector("#ent_lists");
+
+    // on boucle sur le tableau pour créer les éléments HTML
+    if (ent_company.length > 0) {
+        for (i=0; i<ent_company.length; i++) {
+            ent_id = i + 1;
+
+            ent_blockToAdd = "<div id='ent_block"+ent_id+"' onclick='ent_selectActivity(ent_block"+ent_id+")'" + " class='ent_alignDiv ent_listing'><div id='ent_listOfAddedActivities"+ent_id+ "' class='ent_columnDiv ent_listOfAddedActivities'><p class='ent_thing'><span onclick='ent_selectActivity(ent_block"+ent_id+")," + " ent_removeAddedActivity("+i+")' class='ent_toRemoveThings'>x</span><span id='ent_activity"+ent_id + "' class='ent_addedThing'>"+ent_company[i][0][0]+"</span></p><p class='ent_activityDetail'><span>"+ent_company[i][0][1]+"</span></p></div><div id='ent_mainActivity"+ent_id + "' onclick='ent_selectMainActivity(ent_mainActivity"+ent_id+")'" + " class='ent_alignDiv ent_mainActivity'></div><div id='ent_listOfAddedTutors"+ent_id+ "' class='ent_columnDiv ent_listOfAddedTutors'></div></div>";
+
+            // on l'ajoute à la vue HTML
+            ent_activityBoard.innerHTML += ent_blockToAdd;
+
+            if (ent_company[i][1] != undefined) {
+                for (j=0; j<ent_company[i][1].length; j++) {
+                    ent_tutorId = j + 1;
+
+                    ent_tutorToAdd = "<p class='ent_thing'><span onclick='ent_selectActivity(ent_block"+ent_id+")," + " ent_removeAddedTutor("+j+")' class='ent_toRemoveThings'>x</span><span id='tuteur"+ ent_tutorId + "ofActivity"+ ent_id +"' class='ent_addedThing'>"+ ent_company[i][1][j] +"</span></p>";
+
+                    ent_listOfAddedTutorsId = "#ent_listOfAddedTutors" + ent_id;
+
+                    ent_activityBlock = ent_activityBoard.querySelector(ent_listOfAddedTutorsId);
+
+                    ent_activityBlock.innerHTML += ent_tutorToAdd;
+                }
+            }
+        }
+
+        // si c'est la première activité que l'on ajoute on la passe directement en sélectionnée et en activité principale
+        if (ent_company.length == 1) {
+            document.querySelector("#ent_block1").classList.add("ent_selectedDynamicAdd");
+            document.querySelector("#ent_mainActivity1").classList.add("ent_marker");
+
+            // stockage du block en cours de sélection
+            ent_oldSelectedBlockActivity = document.querySelector("#ent_block1");
+            // stockage de l'activité principale
+            ent_oldMainActivity = document.querySelector("#ent_mainActivity1");
+            // stockage des tuteurs de l'activité en cours de sélection
+            ent_tutorsSelected = ent_oldSelectedBlockActivity.lastElementChild.children;
+            ent_activitySelected = 0;
+
+        // sinon on attribut la sélection à celle qui été déjà en cours de sélection et la principale à celle qui l'été
+        } else {
+            ent_oldSelectedBlockActivityId = ent_oldSelectedBlockActivity.id;
+            ent_oldSelectedBlockActivityId = "#"+ent_oldSelectedBlockActivityId;
+
+            ent_oldMainActivityId = ent_oldMainActivity.id;
+            ent_oldMainActivityId = "#"+ent_oldMainActivityId;
+
+            document.querySelector(ent_oldSelectedBlockActivityId).classList.add("ent_selectedDynamicAdd");
+            // stockage du block en cours de sélection
+            ent_oldSelectedBlockActivity = document.querySelector(ent_oldSelectedBlockActivityId);
+            document.querySelector(ent_oldMainActivityId).classList.add("ent_marker");
+            // stockage de l'activité principale
+            ent_oldMainActivity = document.querySelector(ent_oldMainActivityId);
+            // stockage des tuteurs de l'activité en cours de sélection
+            ent_tutorsSelected = ent_oldSelectedBlockActivity.lastElementChild.children;
+        }
+    }
+}
+
+
 // fonction permettant l'ajout d'une activité
 function ent_addActivityToList() {
     // variables
-    var i, ent_blockToAdd, ent_blockId;
+    var i;
     var ent_activityFind = false;
-
-    // récupération du tableau de listing des activités et tuteurs
-    var ent_list = document.querySelector("#ent_lists");
 
     // récupération du nom de l'activité présente dans le champ "Sélectionner une activité"
     var ent_nameOfActivity = document.querySelector("#ent_t_activity").value;
 
-    // si une activité a déjà été ajoutée
-    if (ent_nbActivity != 0) {
-        // on test si l'activité que l'on souhaite ajouter ne l'est pas déjà
-        for (i = 1; i <= ent_nbActivity; i++) {
-            if (ent_nameOfActivity == document.querySelector("#ent_activity" + i).textContent) {
+    // si l'entreprise a déjà une activité, on teste si celle que l'on veut ajouter n'est pas déjà présente
+    if (ent_company.length > 0) {
+        for (i=0; i<ent_company.length; i++) {
+            if (ent_nameOfActivity == ent_company[i][0][0]) {
                 ent_activityFind = true;
             }
         }
@@ -599,164 +727,115 @@ function ent_addActivityToList() {
 
     // si il n'y pas d'autre activité déjà ajoutée ou que l'activité n'a pas été trouvée parmis celles déjà présentes
     if (!ent_activityFind) {
-        // on incrémente le nombre d'activité ajoutées
-        ent_nbActivity++;
+        // on l'ajoute au tableau des activités de l'entreprise
+        ent_company.push([[ent_nameOfActivity, ent_t_activityDetail.value]]);
 
-        // on crée le block à ajouter
-        ent_blockToAdd = "<div id='ent_block"+ent_nbActivity+"' onclick='ent_selectActivity(ent_block"+ent_nbActivity+")'" + " class='ent_alignDiv ent_listing ent_selectedDynamicAdd'><div id='ent_listOfAddedActivities"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedActivities'><p class='ent_thing'><span onclick='ent_removeAddedActivity(\"ent_activity"+ent_nbActivity+"\")' class='ent_toRemoveThings'>x</span><span  id='ent_activity"+ent_nbActivity + "' class='ent_addedThing'>"+ent_nameOfActivity+"</span></p></div><div id='ent_mainActivity"+ent_nbActivity + "' onclick='ent_selectMainActivity(ent_mainActivity"+ent_nbActivity+")'" + " class='ent_alignDiv ent_mainActivity'></div><div id='ent_listOfAddedTutors"+ent_nbActivity+ "' class='ent_columnDiv ent_listOfAddedTutors'></div></div>";
+        // on vide le champ d'ajout et le champ des détails
+        document.querySelector("#ent_t_activity").value = "";
+        document.querySelector("#ent_t_activityDetail").value = "";
+        // on cache le bouton "+"
+        document.querySelector("#ent_addActivity").classList.remove("ent_visible");
+        document.querySelector("#ent_addActivity").classList.add("ent_invisible");
+        // on construit la vue HTML
+        ent_clearActivities();
+        ent_buildActivities();
 
-        // on l'ajoute
-        ent_list.innerHTML += ent_blockToAdd;
+    // sinon on informe l'utilisateur que cette activité est déjà présente
+    } else {
+        alert("Cette activité a déjà été ajoutée");
         // on vide le champ d'ajout
         document.querySelector("#ent_t_activity").value = "";
         // on cache le bouton "+"
         document.querySelector("#ent_addActivity").classList.remove("ent_visible");
         document.querySelector("#ent_addActivity").classList.add("ent_invisible");
-
-        // si il existe déjà un block d'activités ajoutées on lui enlève la classe "ent_selectedDynamicAdd"
-        if (ent_nbActivity > 1) {
-
-            ent_oldBlockId = "#"+ent_oldSelectedBlockActivity.id;
-            ent_oldSelectedBlockActivity = document.querySelector(ent_oldBlockId);
-            ent_oldSelectedBlockActivity.classList.remove("ent_selectedDynamicAdd");
-
-            ent_blockId = "#ent_block"+ent_nbActivity
-            ent_oldSelectedBlockActivity = document.querySelector(ent_blockId);
-        } else {
-            // on stocke le block sélectionné dans la variable globale
-            ent_oldSelectedBlockActivity = document.querySelector("#ent_block1");
-
-            // si c'est le premier ajout d'activité on lui attribut la classe correspondant à l'activité prinicipale
-            ent_oldMainActivity = document.querySelector("#ent_mainActivity1");
-            ent_oldMainActivity.classList.add("ent_marker");
-        }
-    } else if (ent_activityFind) {
-        // sinon on ne l'ajoute pas et on informe l'utilisateur
-        alert("Cette activité a déjà été ajoutée");
     }
-
 }
 
 
 // fonction qui permet l'ajout d'un tuteur sur une activité
- function ent_addTutor() {
+function ent_addTutorToList() {
     // variables
-    var i;
+    var i, ent_tutorsName;
     var ent_tutorFind = false;
 
-    // récupération du nom du tuteur rentré dans le champ
-    var ent_tutorName = document.querySelector("#ent_t_tutor").value;
+    // récupération du nom du tuteur que l'on souhaite ajouter
+    var ent_nameOfTutor = document.querySelector("#ent_t_tutor").value;
 
-    // si au moins une activité a déjà été ajoutée
-    if (ent_nbActivity > 0) {
-        // récupération du nombre de tuteurs déjà ajoutés dans l'élement sélectionné
-        var ent_nbTutor = ent_oldSelectedBlockActivity.lastElementChild.childElementCount;
-        var ent_tutorId = ent_nbTutor + 1;
+    // si l'activité sélectionné a déjà au moins un tuteur
+    if (ent_oldSelectedBlockActivity.lastElementChild.children.length > 0) {
+        // si l'activité sélectionnée a déjà un tuteur, on teste si celui que l'on veut ajouter n'est pas déjà présent
+        for (i=0; i<ent_tutorsSelected.length; i++) {
+            ent_tutorsName = ent_tutorsSelected[i].innerText.replace("x", "");
 
-        // récupération du numéro de la ligne sélectionnée
-        var ent_selectedLineId = ent_oldSelectedBlockActivity.id.substring(9);
-
-        // récupération du contenu de l'élément sélectionné
-        var ent_blockOfSelectionnedTutorsDiv = document.querySelector("#ent_listOfAddedTutors" + ent_selectedLineId);
-        // récupération de tous les paragraphes
-        var ent_allPara = ent_blockOfSelectionnedTutorsDiv.querySelectorAll("p");
-
-        // on test si le tuteur n'a pas déjà été ajouté à l'activité auparavant
-        for (i=0; i < ent_nbTutor; i++) {
-            if (ent_tutorName == ent_allPara[i].lastElementChild.textContent) {
+            if (ent_tutorsName == ent_nameOfTutor) {
                 ent_tutorFind = true;
             }
         }
+    }
 
-        // si il n'y a pas de correspondance avec un tuteur déjà ajouté
-        if (!ent_tutorFind) {
-            // si il y a déjà au moins un tuteur d'ajouté
-            if (ent_oldSelectedBlockActivity.lastElementChild.childElementCount > 0) {
-                // on cherche si l'id du tuteur que l'on souhaite ajouter ne soit pas déjà utilisée
-                var ent_idToFind = "tuteur" + ent_tutorId + "ofActivity" + ent_selectedLineId;
-                if (ent_oldSelectedBlockActivity.lastElementChild.lastElementChild.lastElementChild.id == ent_idToFind) {
-                    // on augmente le chiffre de l'id du tuteur à ajouter
-                    ent_tutorId++;
-                }
-            }
+    // si il n'y pas d'autre tuteur déjà ajouté ou que le tuteur n'a pas été trouvé parmis ceux déjà présents
+    if (!ent_tutorFind) {
+        // on l'ajoute au tableau des tuteurs de l'activité
+        if (ent_company[ent_activitySelected][1] != undefined) {
+            ent_company[ent_activitySelected][1].push(ent_nameOfTutor);
+        } else {
+            ent_company[ent_activitySelected].push([ent_nameOfTutor]);
 
-            // tuteur à ajouter
-            var ent_tutorToAdd = "<p class='ent_thing'><span onclick='ent_removeAddedTutor(\"tuteur"+ent_tutorId+"ofActivity"+ent_selectedLineId +"\")' class='ent_toRemoveThings'>x</span><span id='tuteur"+ ent_tutorId + "ofActivity"+ ent_selectedLineId +"' class='ent_addedThing'>"+ ent_tutorName +"</span></p>";
-
-            // ajout dans le block liste des tuteurs
-            ent_oldSelectedBlockActivity.lastElementChild.innerHTML += ent_tutorToAdd;
-
-            // on vide le champ d'ajout des tuteurs
-            document.querySelector("#ent_t_tutor").value = "";
-            // on cache le bouton "+"
-            document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
-            document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
-
-        } else if (ent_tutorFind) {
-            // sinon on informe l'utilisateur que le tuteur a déjà été ajouté
-            alert("Ce tuteur a déjà été ajouté pour cette activité");
         }
+        // on vide le champ d'ajout
+        document.querySelector("#ent_t_tutor").value = "";
+        // on cache le bouton "+"
+        document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
+        document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
+        // on construit la vue HTML
+        ent_clearActivities();
+        ent_buildActivities();
+
+        // sinon on informe l'utilisateur que ce tuteur est déjà présent
     } else {
-        // sinon on informe l'utilisateur qu'il doit d'abord ajouter une activité
-        alert("Veuillez d'abord ajouter une activité");
+        alert("Ce tuteur a déjà été ajouté à l'activité sélectionnée");
+        // on vide le champ d'ajout
+        document.querySelector("#ent_t_tutor").value = "";
+        // on cache le bouton "+"
+        document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
+        document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
     }
 }
 
 
 // fonction qui permet de retirer un tuteur de la liste des tuteurs ajoutés
-function ent_removeAddedTutor(tutorId) {
-    var tutorId = "#"+tutorId;
-    // récupération du tuteur à retirer
-    var ent_tutorToRemove = document.querySelector(tutorId).parentElement;
+function ent_removeAddedTutor(tutorIndex) {
+    // suppression de l'élément dans le tableau JS
+    if (ent_company[ent_activitySelected][1].length > 1) {
+        ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
+    } else {
+        ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
+        ent_company[ent_activitySelected].splice(1, 1);
+    }
 
-    // on retire le tuteur et son block
-    ent_tutorToRemove.parentElement.removeChild(ent_tutorToRemove);
+    // on reconstruit la vue HTML
+    ent_clearActivities();
+    ent_buildActivities();
 }
 
 
 // fonction qui permet de retirer une activité
-function ent_removeAddedActivity(activityId) {
-    // on test si il y a toujours un tuteur d'ajouté à l'activité
-    if (ent_oldSelectedBlockActivity.lastElementChild.childElementCount != 0) {
+function ent_removeAddedActivity(activityIndex) {
+    // on test si il y a toujours un tuteur d'ajouté dans l'activité
+    if (ent_company[ent_activitySelected].length > 1) {
         alert("Veuillez d'abord retirer tous les tuteurs rattachés à cette activité");
     } else {
-        var activityId = "#"+activityId;
-        // récupération du block de l'activité à retirer
-        var ent_activityToRemove = document.querySelector(activityId).parentElement.parentElement.parentElement;
+        ent_company.splice(activityIndex, 1);
 
-        // on retire l'activité et son block du tableau
-        var ent_lists = document.querySelector("#ent_lists");
-        ent_lists.removeChild(ent_activityToRemove);
-
-        // on décrémente le compteur d'activités  ajoutées
-        ent_nbActivity--;
+        // on reconstruit la vue HTML
+        ent_clearActivities();
+        ent_buildActivities();
     }
 }
 
 
 
 
-
-
-/*  A VOIR SI POSSIBLE........
-// fonction qui permet de sélectionner l'activité dans laquelle on veut ajouter des tuteurs
-function ent_selectActivityMain(blockId, classToAdd, oldElement) {
-    // variables
-    var ent_blockId = "#"+blockId.id;
-
-    // récupération du block à sélectionner
-    var ent_block = document.querySelector(ent_blockId);
-
-    // si le le block sur lequel on a cliqué ne détient pas la classe ent_selectedDynamicAdd
-    if (!ent_block.classList.contains(classToAdd)) {
-        // alors on lui ajoute
-        ent_block.classList.add(classToAdd);
-        // et on l'enlève à l'ancien block sélectionné
-        oldElement.classList.remove(classToAdd);
-        oldElement = ent_block;
-    }
-}
-*/
 
 
 /*

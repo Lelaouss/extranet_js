@@ -309,6 +309,28 @@
     color: #4FAA27;
 }
 
+.ent_activityDetail {
+    background-color: #4FAA27;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 2px;
+    width: 200px;
+    border: 2px solid #4FAA27;
+    border-radius: 6px 6px;
+    word-wrap: break-word;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 0.5em;
+}
+
+.ent_activityDetail:hover {
+    background-color: #FFFFFF;
+    cursor: default;
+    color: #4FAA27;
+}
+
 .ent_toRemoveThings {
     padding-left: 5px;
     padding-right: 5px;
