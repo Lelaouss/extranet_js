@@ -51,6 +51,7 @@ var ent_tutorsSelected;
 
 // Stockage de l'activité principale
 var ent_oldMainActivity;
+var ent_oldMainActivityId = [];
 
 
 
@@ -68,7 +69,7 @@ function ent_addLine() {
     var ent_arraySplitted = new Array();
 
     // récupération de l'index de l'activité principale
-    if (ent_oldMainActivity != undefined) {
+    if (ent_oldMainActivity.length != 0) {
         var ent_mainActivityIndex = ent_oldMainActivity.id.substr(16)-1;
     }
 
@@ -80,7 +81,7 @@ function ent_addLine() {
         }
         ent_activities = ent_activities.substr(0, ent_activities.length-1);
 
-        ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
+        ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_oldMainActivity.id+"§"+ent_activities;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
         ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
     // cas quand les filtres sont activés
@@ -90,7 +91,7 @@ function ent_addLine() {
         }
         ent_activities = ent_activities.substr(0, ent_activities.length-1);
 
-        ent_arrayJS[ent_arrayJS.length] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
+        ent_arrayJS[ent_numLines] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_oldMainActivity.id+"§"+ent_activities;
         // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
         ent_arrayJSToSplit[ent_numLines] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
     // sinon on affiche un message d'alerte et on stop la fonction
@@ -104,9 +105,6 @@ function ent_addLine() {
     ent_buildHTMLBoard(ent_arrayJSToSplit);
     // on vide les champs de recherche
     ent_searchRaz();
-    // on vide la vue HTML des activités et son tableau JS
-    ent_clearActivities();
-    ent_company = [];
 }
 
 
@@ -160,20 +158,24 @@ function ent_recupLine(iSelectedLine) {
     ent_t_adressCity.value = ent_arraySplittedSelected[8];
     ent_t_adressCountry.value = ent_arraySplittedSelected[9];
     ent_t_represName.value = ent_arraySplittedSelected[10];
+    ent_oldMainActivityId = ent_arraySplittedSelected[11];
 
     // reformation du tableau des activités et tuteurs de l'entreprise
-    ent_company = ent_arraySplittedSelected[11].split("|");
-    for (i=0; i<ent_company.length; i++) {
-        ent_company[i] = [ent_company[i].split(",")];
+    var ent_company_temp = ent_arraySplittedSelected[12].split("|");
+    ent_company = [];
+    for (i=0; i<ent_company_temp.length; i++) {
+        ent_company[i] = [];
+        ent_company[i][0] = [];
+        var ent_company_detail = ent_company_temp[i].split(",");
+        ent_company[i][0][0] = ent_company_detail[0];
+        ent_company[i][0][1] = ent_company_detail[1];
+        ent_company[i][1] = [];
+        for (var iTuteur = 2; iTuteur<ent_company_detail.length; iTuteur++) {
+            ent_company[i][1][iTuteur-2] = ent_company_detail[iTuteur];
+        }
     }
-    // for (i=0; i<ent_company[i]; i++) {
-    //
-    // }
-    // console.log("ent_company => "+ ent_company);
 
-    // on génère la vue HTML des activités et tuteurs de l'entreprise
-    ent_clearActivities();
-    ent_buildActivities();
+    ent_oldMainActivityId = "#"+ent_oldMainActivityId;
 
     // mise en évidence la ligne sélectionnée
     // récupération de la ligne cliquée sur le tableau HTML
@@ -193,6 +195,9 @@ function ent_recupLine(iSelectedLine) {
         document.getElementById("ent_ajouter").classList.toggle("ent_hide");
         // indication à l'utilisateur sur l'entreprise en cours d'édition
         ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // on génère la vue HTML des activités et tuteurs de l'entreprise
+        ent_clearActivities();
+        ent_buildActivities();
     // si une ligne a déjà été sélectionnée et qu'elle est différente de celle qui est déjà séléctionnée
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine != iSelectedLine)) {
         // on enleve la classe selected à la ligne déjà sélectionnée
@@ -203,6 +208,9 @@ function ent_recupLine(iSelectedLine) {
         ent_selectedLine = iSelectedLine;
         // indication à l'utilisateur sur l'entreprise en cours d'édition
         ent_indications.innerHTML = "Vous éditez l'entreprise: <span id=\"ent_socialName\">"+ent_t_social.value+"</span>";
+        // on génère la vue HTML des activités et tuteurs de l'entreprise
+        ent_clearActivities();
+        ent_buildActivities();
     // sinon si la ligne sélectionnée est la même que la selection en cours
     } else if ((ent_nbClickedLines == 1) && (ent_selectedLine == iSelectedLine)) {
         // on enlève la classe
@@ -332,6 +340,14 @@ function ent_buildHTMLBoard(tableau) {
     document.getElementById("ent_ajouter").classList.remove("ent_hide");
     // remise à zéro des champs
     ent_raz();
+    // on vide la vue HTML des activités et son tableau JS
+    ent_clearActivities();
+    ent_company = [];
+    // on vide certaines variables globales
+    // ent_oldMainActivity = [];
+    ent_tutorsSelected = [];
+    ent_activitySelected = [];
+    ent_oldSelectedBlockActivity = [];
 }
 
 
@@ -357,10 +373,7 @@ function ent_delLine() {
         ent_search();
         // nettoyage de la zone d'indication d'édition
         ent_indications.textContent = "Aucune entreprise en cours d'édition.";
-        // on vide la vue HTML des activités et tuteurs
-        ent_clearActivities();
-        ent_company = [];
-        // sinon fin de la fonction
+    // sinon fin de la fonction
     } else {
         return;
     }
@@ -385,13 +398,15 @@ function ent_modifyLine() {
             }
             ent_activities = ent_activities.substr(0, ent_activities.length-1);
 
+            var ent_mainActivityIndex = ent_oldMainActivity.id.substr(16)-1;
+
             // on change les valeurs de la ligne à modifier dans les tableaux JS par celles présentes dans les champs de remplissage
-            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_activities;
+            ent_arrayJS[ent_indice] = ent_t_social.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+ent_t_adressCity.value+"§"+ent_t_adressCountry.value+"§"+ent_t_represName.value+"§"+ent_oldMainActivity.id+"§"+ent_activities;
             ent_arrayJSToSplit[ent_indice] = ent_t_social.value+"§"+ent_t_adressCity.value+"§"+ent_t_mail.value+"§"+ent_t_phone.value+"§"+ent_t_fax.value+"§"+ent_t_represName.value+"§"+ent_company[ent_mainActivityIndex][0][0]+"§"+ent_company[ent_mainActivityIndex][0][1];
 
-        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise
+        // sinon on averti l'utilisateur de renseigner au moins le nom de l'entreprise ainsi que de rentrer une activité
         } else {
-            alert("Veuillez renseigner un nom d'entreprise");
+            alert("Veuillez renseigner un nom d'entreprise et lui attribuer au moins un secteur d'activité");
             return;
         }
         // on vide le tableau HTML
@@ -402,10 +417,7 @@ function ent_modifyLine() {
         ent_search();
         // nettoyage de la zone d'indication d'édition
         ent_indications.textContent = "Aucune entreprise en cours d'édition.";
-        // on vide la vue HTML des activités
-        ent_clearActivities();
-        ent_company = [];
-        // si la modification est annulée on arrête la fonction
+    // si la modification est annulée on arrête la fonction
     } else {
         return;
     }
@@ -602,8 +614,6 @@ function ent_selectActivity(blockActivity) {
         ent_oldSelectedBlockActivity = ent_blockActivity;
         // on stock les tuteurs de l'activité en cours de sélection
         ent_tutorsSelected = ent_blockActivity.lastElementChild.children;
-        // on affiche les détails de l'activité sélectionnée dans le champ "détails activités"
-        // document.querySelector("#ent_t_activityDetail").value = ent_company[ent_activitySelected][0][1];
     }
 }
 
@@ -688,18 +698,33 @@ function ent_buildActivities() {
 
         // sinon on attribut la sélection à celle qui été déjà en cours de sélection et la principale à celle qui l'été
         } else {
-            ent_oldSelectedBlockActivityId = ent_oldSelectedBlockActivity.id;
-            ent_oldSelectedBlockActivityId = "#"+ent_oldSelectedBlockActivityId;
+            if (ent_oldSelectedBlockActivity.length == 0) {
+                // stockage du block en cours de sélection
+                ent_oldSelectedBlockActivity = document.querySelector("#ent_block1");
+                document.querySelector("#ent_block1").classList.add("ent_selectedDynamicAdd");
+                ent_activitySelected = 0;
+            } else {
+                // stockage du block en cours de sélection
+                ent_oldSelectedBlockActivity = document.querySelector("#ent_block"+ent_company.length);
+                document.querySelector("#ent_block"+ent_company.length).classList.add("ent_selectedDynamicAdd");
+                ent_activitySelected = ent_company.length-1;
+            }
 
-            ent_oldMainActivityId = ent_oldMainActivity.id;
-            ent_oldMainActivityId = "#"+ent_oldMainActivityId;
+            if (ent_oldMainActivity.length == 0) {
+                document.querySelector("#ent_mainActivity1").classList.add("ent_marker");
+                // stockage de l'activité principale
+                ent_oldMainActivity = document.querySelector("#ent_mainActivity1");
+            } else {
+                if (ent_oldMainActivityId.length == 0) {
+                    ent_oldMainActivityId = ent_oldMainActivity.id;
+                    ent_oldMainActivityId = "#"+ent_oldMainActivityId;
+                }
 
-            document.querySelector(ent_oldSelectedBlockActivityId).classList.add("ent_selectedDynamicAdd");
-            // stockage du block en cours de sélection
-            ent_oldSelectedBlockActivity = document.querySelector(ent_oldSelectedBlockActivityId);
-            document.querySelector(ent_oldMainActivityId).classList.add("ent_marker");
-            // stockage de l'activité principale
-            ent_oldMainActivity = document.querySelector(ent_oldMainActivityId);
+                document.querySelector(ent_oldMainActivityId).classList.add("ent_marker");
+                // stockage de l'activité principale
+                ent_oldMainActivity = document.querySelector(ent_oldMainActivityId);
+            }
+                
             // stockage des tuteurs de l'activité en cours de sélection
             ent_tutorsSelected = ent_oldSelectedBlockActivity.lastElementChild.children;
         }
@@ -761,116 +786,86 @@ function ent_addTutorToList() {
     // récupération du nom du tuteur que l'on souhaite ajouter
     var ent_nameOfTutor = document.querySelector("#ent_t_tutor").value;
 
-    // si l'activité sélectionné a déjà au moins un tuteur
-    if (ent_oldSelectedBlockActivity.lastElementChild.children.length > 0) {
-        // si l'activité sélectionnée a déjà un tuteur, on teste si celui que l'on veut ajouter n'est pas déjà présent
-        for (i=0; i<ent_tutorsSelected.length; i++) {
-            ent_tutorsName = ent_tutorsSelected[i].innerText.replace("x", "");
+    if (ent_company.length > 0) {
+        // si l'activité sélectionné a déjà au moins un tuteur
+        if (ent_oldSelectedBlockActivity.lastElementChild.children.length > 0) {
+            // si l'activité sélectionnée a déjà un tuteur, on teste si celui que l'on veut ajouter n'est pas déjà présent
+            for (i=0; i<ent_tutorsSelected.length; i++) {
+                ent_tutorsName = ent_tutorsSelected[i].innerText.replace("x", "");
 
-            if (ent_tutorsName == ent_nameOfTutor) {
-                ent_tutorFind = true;
+                if (ent_tutorsName == ent_nameOfTutor) {
+                    ent_tutorFind = true;
+                }
             }
         }
-    }
 
-    // si il n'y pas d'autre tuteur déjà ajouté ou que le tuteur n'a pas été trouvé parmis ceux déjà présents
-    if (!ent_tutorFind) {
-        // on l'ajoute au tableau des tuteurs de l'activité
-        if (ent_company[ent_activitySelected][1] != undefined) {
-            ent_company[ent_activitySelected][1].push(ent_nameOfTutor);
+        // si il n'y pas d'autre tuteur déjà ajouté ou que le tuteur n'a pas été trouvé parmis ceux déjà présents
+        if (!ent_tutorFind) {
+            // on l'ajoute au tableau des tuteurs de l'activité
+            if (ent_company[ent_activitySelected][1] != undefined) {
+                ent_company[ent_activitySelected][1].push(ent_nameOfTutor);
+            } else {
+                ent_company[ent_activitySelected].push([ent_nameOfTutor]);
+
+            }
+            // on vide le champ d'ajout
+            document.querySelector("#ent_t_tutor").value = "";
+            // on cache le bouton "+"
+            document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
+            document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
+            // on construit la vue HTML
+            ent_clearActivities();
+            ent_buildActivities();
+
+            // sinon on informe l'utilisateur que ce tuteur est déjà présent
         } else {
-            ent_company[ent_activitySelected].push([ent_nameOfTutor]);
-
+            alert("Ce tuteur a déjà été ajouté à l'activité sélectionnée");
+            // on vide le champ d'ajout
+            document.querySelector("#ent_t_tutor").value = "";
+            // on cache le bouton "+"
+            document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
+            document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
         }
-        // on vide le champ d'ajout
-        document.querySelector("#ent_t_tutor").value = "";
-        // on cache le bouton "+"
-        document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
-        document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
-        // on construit la vue HTML
-        ent_clearActivities();
-        ent_buildActivities();
-
-        // sinon on informe l'utilisateur que ce tuteur est déjà présent
     } else {
-        alert("Ce tuteur a déjà été ajouté à l'activité sélectionnée");
-        // on vide le champ d'ajout
-        document.querySelector("#ent_t_tutor").value = "";
-        // on cache le bouton "+"
-        document.querySelector("#ent_toAddTutor").classList.remove("ent_visible");
-        document.querySelector("#ent_toAddTutor").classList.add("ent_invisible");
+        alert("Veuillez d'abord ajouter une activité.");
     }
 }
 
 
 // fonction qui permet de retirer un tuteur de la liste des tuteurs ajoutés
 function ent_removeAddedTutor(tutorIndex) {
-    // suppression de l'élément dans le tableau JS
-    if (ent_company[ent_activitySelected][1].length > 1) {
-        ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
-    } else {
-        ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
-        ent_company[ent_activitySelected].splice(1, 1);
-    }
+    // on demande confirmation avant de supprimer
+    var ent_confirmRemove = confirm("Etes vous sûr de vouloir retirer le tuteur : " + ent_company[ent_activitySelected][1][tutorIndex] + " de l'activité " + ent_company[ent_activitySelected][0][0] + " ?");
 
-    // on reconstruit la vue HTML
-    ent_clearActivities();
-    ent_buildActivities();
+    if (ent_confirmRemove) {
+        // suppression de l'élément dans le tableau JS
+        if (ent_company[ent_activitySelected][1].length > 1) {
+            ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
+        } else {
+            ent_company[ent_activitySelected][1].splice(tutorIndex, 1);
+            ent_company[ent_activitySelected].splice(1, 1);
+        }
+        // on reconstruit la vue HTML
+        ent_clearActivities();
+        ent_buildActivities();
+    } else {
+        return;
+    }
 }
 
 
 // fonction qui permet de retirer une activité
 function ent_removeAddedActivity(activityIndex) {
+    // on demande confirmation avant de supprimer
+    var ent_confirmRemove = confirm("Etes vous sûr de vouloir retirer l'activité : " + ent_company[activityIndex][0][0] + " ?");
     // on test si il y a toujours un tuteur d'ajouté dans l'activité
-    if (ent_company[ent_activitySelected].length > 1) {
-        alert("Veuillez d'abord retirer tous les tuteurs rattachés à cette activité");
-    } else {
+    if (ent_confirmRemove) {
         ent_company.splice(activityIndex, 1);
 
         // on reconstruit la vue HTML
         ent_clearActivities();
         ent_buildActivities();
+    } else {
+        return;
     }
 }
-
-
-
-
-
-
-/*
-// fonction qui permet de gaver le tableau pour les tests
-function tester(social, represName, activity) {
-    // création du nouveau tableau JS splité pour création du board HTML
-    var ent_arraySplitted = new Array();
-
-    ent_arrayJS[ent_numLines] = social+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+ent_t_adress.value+"§"+ent_t_adressCompl2.value+"§"+ent_t_adressCompl1.value+"§"+ent_t_adressCP.value+"§"+"adressCity"+"§"+activity+"§"+"activityDetail"+"§"+represName+"§"+ent_t_represPrenom.value+"§"+ent_t_represMail.value+"§"+ent_t_represTel.value+"§"+ent_t_tutorName.value+"§"+ent_t_tutorPrenom.value+"§"+ent_t_tutorMail.value+"§"+ent_t_tutorTel.value;
-    // on parcours le tableau JS des infos à afficher en HTML: on split par les "§"
-    ent_arrayJSToSplit[ent_numLines] = social+"§"+"adressCity"+"§"+"mail"+"§"+"phone"+"§"+"fax"+"§"+represName+"§"+activity+"§"+"activityDetail";
-
-    // on vide le tableau HTML
-    ent_clearHTMLBoard();
-    // on le reconstruit à partir du tableau JS
-    ent_buildHTMLBoard(ent_arrayJSToSplit);
-    // on vide les champs de recherche
-    ent_searchRaz();
-}
-
-
-// valeurs pour tester à supprimer plus tard
-tester("javascript", "jean", "informatique");
-tester("css", "jean", "web");
-tester("html", "fabien", "web");
-tester("jquery", "seb", "informatique");
-tester("ajax", "seb", "web");
-tester("VueJS", "jack", "web");
-
-
-
-
-
-<p class='ent_thing'></p>
-
-
-*/
-
