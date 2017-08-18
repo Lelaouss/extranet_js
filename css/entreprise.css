@@ -142,6 +142,7 @@
 
 #ent_coordonneesTotal input {
     border: 1px solid #87BB34;
+    margin-right: 10px;
 }
 
 #ent_coordonneesTotal input:focus {
@@ -191,6 +192,10 @@
 
 #ent_represDiv div {
     padding-bottom: 5px;
+}
+
+#ent_represDiv fieldset {
+    height: 130px;
 }
 
 #ent_coordonneesDiv, #ent_represDiv {
